@@ -2,7 +2,6 @@ module.exports = function (app) {
   const moment = require('moment')
   const config = require('config')
   const constants = config.get('constants');
-
   app.post('/api/v1/user/updateOrAdd', async (ctx, next) => {
     let params = ctx.params
     let account_id = params.accountId
