@@ -2,6 +2,7 @@ module.exports = function (app) {
   const moment = require('moment')
   const {Pool} = require('pg')
   const config = require('config')
+  const constants = config.get('constants');
   app.get('/api/v1/communities/list', async (ctx, next) => {
     let params = ctx.params
     let accountId = params.accountId
@@ -283,7 +284,7 @@ module.exports = function (app) {
     const ownershipChangeFunctionCalls = `
        select account_id from accounts where account_id ~ $1 limit 5 offset 0
     `;
-    const pool = new Pool({connectionString: config.constants.INDEXER})
+    const pool = new Pool({connectionString: constants.INDEXER})
     const {rows} = await pool.query(ownershipChangeFunctionCalls, ['^' + accountId]);
     for (let i = 0; i < rows.length; i++) {
       let row = await User.getRow({account_id: rows[i]['account_id']})

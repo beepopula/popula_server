@@ -6,9 +6,9 @@ const path = require('path');
 
 const CREDENTIALS_DIR = '.near-credentials';
 const credentialsPath = path.join(homedir, CREDENTIALS_DIR);
-
+const constants = config.get('constants');
 class Near {
-  
+
 
   constructor() {
     this.near = {}
@@ -23,12 +23,12 @@ class Near {
       keyStore: this.keyStore,
       ...config.nearWallet
     });
-    this.account = await this.near.account(config.constants.ACCOUNT_ID);
+    this.account = await this.near.account(constants.ACCOUNT_ID);
   }
 
   async sign(arr) {
     const dataBuffer = Buffer.from(arr);
-    const keyPair = await this.keyStore.getKey(config.nearWallet.networkId, config.constants.ACCOUNT_ID);
+    const keyPair = await this.keyStore.getKey(config.nearWallet.networkId, constants.ACCOUNT_ID);
     const { signature } = keyPair.sign(dataBuffer)
     return bs58.encode(signature);
   }
