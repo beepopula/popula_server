@@ -1,6 +1,7 @@
 module.exports = function (app) {
   const moment = require('moment')
   const config = require('config')
+  const constants = config.get('constants');
   app.post('/api/v1/user/updateOrAdd', async (ctx, next) => {
     let params = ctx.params
     let account_id = params.accountId
@@ -328,7 +329,7 @@ module.exports = function (app) {
     let d = []
     if(members.length==0){
       members.push({
-        "communityId" : config.constants.MAIN_CONTRACT,
+        "communityId" : constants.MAIN_CONTRACT,
       })
     }
     for (let i = 0; i < members.length; i++) {
@@ -378,7 +379,7 @@ module.exports = function (app) {
       d.push(author)
     }
     let c = []
-    c.push(config.constants.MAIN_CONTRACT)
+    c.push(constants.MAIN_CONTRACT)
     for (let i = 0; i < d.length; i++) {
       c.push(d[i]['communityId'])
     }
