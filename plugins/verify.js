@@ -51,7 +51,7 @@ const verify = async (ctx, next) => {
         } catch (e) {
           ctx.throw(401, e);
         }
-
+        console.log(moment().valueOf());
         if ((moment().valueOf()-timestamp)>60*1000*60){
           ctx.throw(401, 'time  expire');
         }
