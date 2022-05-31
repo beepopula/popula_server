@@ -1,6 +1,6 @@
 const near = require("../utils/near.js")
 const bs58 = require('bs58');
-
+const moment = require('moment')
 
 const verify = async (ctx, next) => {
   let fgYellow = "\x1b[33m%s\x1b[0m";
@@ -33,6 +33,7 @@ const verify = async (ctx, next) => {
 
       const data = params.data
       const account_id = params.data.me
+      const timestamp = params.data.timestamp
       const signature = params.signature
       let User = ctx.model("user")
       if (!signature) {
@@ -51,6 +52,9 @@ const verify = async (ctx, next) => {
           ctx.throw(401, e);
         }
 
+        if ((moment().valueOf()-timestamp)>60*1000*60){
+          ctx.throw(401, 'time  expire');
+        }
         // let doc = await User.getRow({account_id: account_id})
         // if (!doc) {
         //   doc = {
