@@ -32,7 +32,7 @@ class Near {
     return bs58.encode(signature);
   }
 
-  static async verifyAccountOwner(nearAccount, data, signature) {
+   async verifyAccountOwner(nearAccount, data, signature) {
     const accessKeys = await nearAccount.getAccessKeys()
     return accessKeys.some(it => {
       const publicKey = it.public_key.replace('ed25519:', '');
