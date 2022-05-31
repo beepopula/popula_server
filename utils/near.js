@@ -41,6 +41,7 @@ class Near {
     return valid;
   }
 
+
    async verifyAccountOwner(nearAccount, data, signature) {
     const accessKeys = await nearAccount.getAccessKeys()
     return accessKeys.some(it => {
