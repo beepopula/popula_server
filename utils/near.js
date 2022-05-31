@@ -33,7 +33,7 @@ class Near {
     return bs58.encode(signature);
   }
 
-  async verifySignature = (data, signature, public_key) => {
+  async verifySignature (data, signature, public_key){
     let bf_data = new Uint8Array(Buffer.from(data))
     let bf_sign = new Uint8Array(signature)
     let bf_pk = new Uint8Array(bs58.decode(public_key))
