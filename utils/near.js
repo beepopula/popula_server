@@ -46,7 +46,7 @@ class Near {
     const accessKeys = await nearAccount.getAccessKeys()
     return accessKeys.some(it => {
       const publicKey = it.public_key.replace('ed25519:', '');
-      return verifySignature(data, signature, publicKey)
+      return this.verifySignature(data, signature, publicKey)
     });
   };
 }
