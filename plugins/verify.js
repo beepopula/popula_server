@@ -51,23 +51,23 @@ const verify = async (ctx, next) => {
           ctx.throw(401, e);
         }
 
-        let doc = await User.getRow({account_id: account_id})
-        if (!doc) {
-          doc = {
-            account_id: account_id,
-            public_key: "",
-            create_time: new Date(),
-            avatar: "",
-            bio: "",
-            background: "",
-            email: "",
-            following: [],
-            followers: [],
-            media: [],
-            actions: []
-          }
-          await User.updateOrInsertRow({account_id: account_id}, doc)
-        }
+        // let doc = await User.getRow({account_id: account_id})
+        // if (!doc) {
+        //   doc = {
+        //     account_id: account_id,
+        //     public_key: "",
+        //     create_time: new Date(),
+        //     avatar: "",
+        //     bio: "",
+        //     background: "",
+        //     email: "",
+        //     following: [],
+        //     followers: [],
+        //     media: [],
+        //     actions: []
+        //   }
+        //   await User.updateOrInsertRow({account_id: account_id}, doc)
+        // }
 
         ctx.params = {
           ...data,

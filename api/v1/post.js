@@ -234,27 +234,27 @@ module.exports = function (app) {
   })
 
 
-  app.post('/api/v1/post/sign_post', async (ctx, next) => {
-    const data = ctx.params.args;
-    const me = ctx.request.body.data.me
-    let Post = ctx.model("post")
-    const item = Post.getRow({target_hash: data.target_hash})
-    const args = {
-      text: ""
-    }
-    item.args = JSON.stringify(args);
-    const permission = await utils.checkPermission(item, me)
-    if (permission && item.args.encrypt_args) {
-      let args = item.args.encrypt_args
-      let args_json = JSON.stringify(args)
-      let sign = await near.sign(args_json)
-      ctx.body = {code: '200', success: true, msg: 'ok', data: sign}
-    } else {
-      ctx.body = {code: '400', success: false, msg: 'ok', err: "no permission"}
-    }
+  // app.post('/api/v1/post/sign_post', async (ctx, next) => {
+  //   const data = ctx.params.args;
+  //   const me = ctx.request.body.data.me
+  //   let Post = ctx.model("post")
+  //   const item = Post.getRow({target_hash: data.target_hash})
+  //   const args = {
+  //     text: ""
+  //   }
+  //   item.args = JSON.stringify(args);
+  //   const permission = await utils.checkPermission(item, me)
+  //   if (permission && item.args.encrypt_args) {
+  //     let args = item.args.encrypt_args
+  //     let args_json = JSON.stringify(args)
+  //     let sign = await near.sign(args_json)
+  //     ctx.body = {code: '200', success: true, msg: 'ok', data: sign}
+  //   } else {
+  //     ctx.body = {code: '400', success: false, msg: 'ok', err: "no permission"}
+  //   }
 
 
-  })
+  // })
 
 
 }
