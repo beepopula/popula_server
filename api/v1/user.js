@@ -123,7 +123,19 @@ module.exports = function (app) {
       //row['data']['joinedCount'] = count
       ctx.body = {code: '200', success: true, msg: 'ok', data: row}
     } else {
-      ctx.body = {code: '200', success: false, msg: 'fail', data: {}}
+      ctx.body = {code: '200', success: true, msg: 'fail', data: {
+        account_id: accountId,
+        public_key: "",
+        create_time: new Date(),
+        avatar: "",
+        bio: "",
+        background: "",
+        email: "",
+        following: [],
+        followers: [],
+        media: [],
+        actions: []
+      }}
     }
   })
 

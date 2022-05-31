@@ -3,7 +3,6 @@ const config = require('config');
 const bs58 = require('bs58');
 const homedir = require('os').homedir();
 const path = require('path');
-
 const CREDENTIALS_DIR = '.near-credentials';
 const credentialsPath = path.join(homedir, CREDENTIALS_DIR);
 const constants = config.get('constants');
