@@ -470,7 +470,6 @@ module.exports = function (app) {
       ctx.body = {code: '200', success: false, msg: 'fail', data: {}}
     }
 
-
   })
   app.get('/api/v1/user/getNotifications', async (ctx, next) => {
     let params = ctx.params
