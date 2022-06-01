@@ -499,6 +499,7 @@ module.exports = function (app) {
     let follows = await Notification.getRows(fq,{createAt:-1})
     if (follows.length>0){
       comments.push({
+        type:'follow',
         data:{
           type:'follow',
           follow: follows,
