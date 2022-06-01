@@ -481,14 +481,15 @@ module.exports = function (app) {
     if (lastTime) {
       q['createAt'] = {$gte: lastTime}
     }
-    let comments = await Notification.getRows(q)
+    let comments = await Notification.getRows(q,{createAt:-1})
     for (let i = 0; i < comments.length; i++) {
       let q = {type: "like", target_hash: comments[i].target_hash}
       if (lastTime) {
         q['createAt'] = {$gte: lastTime}
       }
-      let likes = await Notification.getRows(q)
+      let likes = await Notification.getRows(q,{createAt:-1})
       comments[i]['data'] = {}
+      comments[i]['data']['type']='comment'
       comments[i]['data']['likes'] = likes;
       comments[i]['data']['count'] = likes.length;
     }
@@ -496,18 +497,24 @@ module.exports = function (app) {
     if (lastTime) {
       fq['createAt'] = {$gte: lastTime}
     }
-    let follow = await Notification.getRows(fq)
+    let follows = await Notification.getRows(fq,{createAt:-1})
+    if (follows.length>0){
+      comments.push({
+        data:{
+          type:'follow',
+          follow: follows,
+          count: follows.length
+        },
+        createAt:follows[0].createAt
+      })
+
+    }
+
     ctx.body = {
       code: '200',
       success: true,
       msg: 'ok',
-      data: {
-        comments: comments,
-        follow: {
-          follow: follow,
-          count: follow.length
-        }
-      },
+      data: comments.sort(keySort('createAt', false)),
       lastTime: moment().valueOf()
     }
 
