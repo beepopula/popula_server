@@ -477,7 +477,7 @@ module.exports = function (app) {
     let lastTime = params.lastTime
     let Notification = ctx.model("notification")
     let User = ctx.model("user")
-    let q = {accountId: accountId, type: "comment"}
+    let q = {accountId: accountId, "$or":[{type:"comment"},{type:"post"}]}
     if (lastTime) {
       q['createAt'] = {$gte: lastTime}
     }
@@ -491,9 +491,9 @@ module.exports = function (app) {
       for (let i=0;i<likes.length;i++){
         let user =await User.getRow({account_id:likes[i]['accountId']})
         likes[i]['data']={
-          name:user?user['name']:'',
+          name:user&&user['name']?user['name']:'',
           account_id:likes[i]['accountId'],
-          avatar:user?user['avatar']:''
+          avatar:user&&user['avatar']?user['avatar']:''
         }
       }
 
@@ -511,9 +511,9 @@ module.exports = function (app) {
     for (let i=0;i<follows.length;i++){
       let user =await User.getRow({account_id:follows[i]['accountId']})
       follows[i]['data']={
-        name:user?user['name']:'',
+        name:user&&user['name']?user['name']:'',
         account_id:follows[i]['accountId'],
-        avatar:user?user['avatar']:''
+        avatar:user&&user['avatar']?user['avatar']:''
       }
     }
 
