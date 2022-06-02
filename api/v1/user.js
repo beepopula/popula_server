@@ -481,6 +481,7 @@ module.exports = function (app) {
     if (lastTime) {
       q['createAt'] = {$gte: lastTime}
     }
+    let n =[]
     let comments = await Notification.getRows(q,{createAt:-1})
     for (let i = 0; i < comments.length; i++) {
       let q = {type: "like", target_hash: comments[i].target_hash}
@@ -501,6 +502,14 @@ module.exports = function (app) {
       comments[i]['data']['type']='comment'
       comments[i]['data']['likes'] = likes;
       comments[i]['data']['count'] = likes.length;
+      if (comments[i]['type']=='post'){
+        if (likes.length!=0){
+          n.push(comments[i])
+        }
+      } else {
+        n.push(comments[i])
+      }
+
     }
     let fq = {account_id: accountId, type: "follow"}
     if (lastTime) {
