@@ -1,4 +1,6 @@
+const near = require('../near.js')
 const BN = require("bn.js")
+
 
 const checkUserTokenBalance = async (account_id, token_id) => {
   if (account_id && token_id) {
