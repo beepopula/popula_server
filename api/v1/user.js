@@ -514,7 +514,7 @@ module.exports = function (app) {
       code: '200',
       success: true,
       msg: 'ok',
-      data: comments.sort(keySort('createAt', false)),
+      data: comments.sort(keySort('createAt', true)),
       lastTime: moment().valueOf()
     }
 
