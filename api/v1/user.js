@@ -527,7 +527,7 @@ module.exports = function (app) {
     }
 
     if (follows.length>0){
-      comments.push({
+      n.push({
         type:'follow',
         data:{
           type:'follow',
@@ -543,7 +543,7 @@ module.exports = function (app) {
       code: '200',
       success: true,
       msg: 'ok',
-      data: comments.sort(keySort('createAt', true)),
+      data: n.sort(keySort('createAt', true)),
       lastTime: moment().valueOf()
     }
 
