@@ -181,7 +181,7 @@ module.exports = function (app) {
     }
 
     try{
-      let permission = await utils.checkPermission(post, accountId)
+      let permission = await utils.checkPermission(post?post:comment, accountId)
       if (permission) {
         return ctx.body = {
           code: '200',
