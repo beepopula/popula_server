@@ -1,3 +1,8 @@
+const BN = require("bn.js")
+
+
+
+
 const checkLayerConditions = async (encryptInfo,accountId) => {
   for (let condition of encryptInfo.conditions) {
     if (encryptInfo.relationship == "Or") {
