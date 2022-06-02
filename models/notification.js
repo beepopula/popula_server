@@ -15,5 +15,10 @@ let schema = require('./base/model')({
 }, "notifications");
 
 schema.index({account_id: 1})
+schema.index({accountId: 1})
+schema.index({type: 1})
+schema.index({target_hash: 1})
+schema.index({createAt: 1})
+
 
 module.exports = schema
