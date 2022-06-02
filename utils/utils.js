@@ -1,6 +1,19 @@
 const BN = require("bn.js")
 
+const checkUserTokenBalance = async (account_id, token_id) => {
+  if (account_id && token_id) {
+    return await near.account.viewFunction(token_id, "ft_balance_of", {account_id: account_id})
+  }
+  return 0
+}
 
+const getTokenMetadata = async (token_id) => {
+  try {
+    return await near.account.viewFunction(token_id, "ft_metadata", {})
+  } catch {
+    return false
+  }
+}
 
 
 const checkLayerConditions = async (encryptInfo,accountId) => {
