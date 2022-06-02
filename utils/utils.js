@@ -1,4 +1,4 @@
-const near = require('../near.js')
+const near = require('./near.js')
 const BN = require("bn.js")
 
 
