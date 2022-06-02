@@ -200,6 +200,7 @@ module.exports = function (app) {
 
       }
     }catch (e){
+      console.log(e)
       return ctx.body = {
         code: '200',
         success: false,
