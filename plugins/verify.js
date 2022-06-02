@@ -5,7 +5,9 @@ const moment = require('moment')
 const verify = async (ctx, next) => {
   let fgYellow = "\x1b[33m%s\x1b[0m";
   let fgBlue = "\x1b[34m%s\x1b[0m";
-  let allow = [
+  let fgGreen ="\x1b[32m%s\x1b[0m";
+
+    let allow = [
     '/api/v1/comment/delete',
     '/api/v1/post/getSignByPostId',
     '/api/v1/post/delete',
@@ -79,6 +81,8 @@ const verify = async (ctx, next) => {
           ...data.args,
           signature: signature
         }
+        console.log(fgGreen, "params :" + JSON.stringify(ctx.params));
+
       } else {
         ctx.throw(401, 'not account owner');
       }
