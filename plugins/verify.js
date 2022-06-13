@@ -17,7 +17,8 @@ const verify = async (ctx, next) => {
     '/api/v1/communities/update',
     '/api/v1/communities/contributor/update',
     '/api/v1/communities/contributor/add',
-    '/api/v1/communities/contributor/delete'
+    '/api/v1/communities/contributor/delete',
+      '/api/v1/post/addEncryptContentSign'
 
   ]
   let params = ctx.params

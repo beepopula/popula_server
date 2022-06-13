@@ -1,7 +1,11 @@
 module.exports = function (app) {
   const utils = require("../../utils/utils.js")
   const near = require("../../utils/near.js")
-
+  const CryptoJS = require('crypto-js');
+  const moment = require('moment')
+  const config = require('config');
+  const key = CryptoJS.enc.Utf8.parse(config.get('aes').key);
+  const iv = CryptoJS.enc.Utf8.parse(config.get('aes').iv);
 
   app.get('/api/v1/post/list', async (ctx, next) => {
     let params = ctx.params
@@ -213,6 +217,48 @@ module.exports = function (app) {
 
 
   })
+
+
+  app.post('/api/v1/post/addEncryptContentSign', async (ctx, next) => {
+    let params = ctx.params
+    let nonce =moment().valueOf()
+    let content = params.content   //{"text":"tt","imgs":[]}
+    let encode = encrypt(JSON.stringify(content))
+    let sign = await near.sign(encode+nonce)
+    let r ={
+      nonce:nonce,
+      sign:sign,
+      encode:encode
+    }
+     ctx.body = {code: '200', success: true, msg: 'ok', data: r}
+  })
+
+  const encrypt = (text) => {
+    let srcs = CryptoJS.enc.Utf8.parse(text);
+    let encrypted = CryptoJS.AES.encrypt(srcs, key, {iv: iv, mode: CryptoJS.mode.CBC, padding: CryptoJS.pad.Pkcs7});
+    return encrypted.ciphertext.toString().toUpperCase();
+  }
+
+  const decrypt = async (text) => {
+    let encryptedHexStr = CryptoJS.enc.Hex.parse(text);
+    let srcs = CryptoJS.enc.Base64.stringify(encryptedHexStr);
+    let decrypt = CryptoJS.AES.decrypt(srcs, key, {iv: iv, mode: CryptoJS.mode.CBC, padding: CryptoJS.pad.Pkcs7});
+    let decryptedStr = decrypt.toString(CryptoJS.enc.Utf8);
+    return decryptedStr.toString();
+  }
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
   app.post('/api/v1/post/delete', async (ctx, next) => {
