@@ -7,6 +7,8 @@ const tweetnacl = require("tweetnacl");
 const CREDENTIALS_DIR = '.near-credentials';
 const credentialsPath = path.join(homedir, CREDENTIALS_DIR);
 const constants = config.get('constants');
+const nearWallet = config.get('nearWallet');
+
 class Near {
 
 
@@ -15,25 +17,23 @@ class Near {
     this.account = {}
     this.keyStore = {}
     this.init()
-
+    console.log('init');
   }
 
   async init() {
     this.keyStore = new nearAPI.keyStores.UnencryptedFileSystemKeyStore(credentialsPath);
     this.near = await nearAPI.connect({
       keyStore: this.keyStore,
-      ...config.nearWallet
+      ...nearWallet
     });
     this.account = await this.near.account(constants.ACCOUNT_ID);
   }
 
   async sign(arr) {
-
+    this.init();
     const dataBuffer = Buffer.from(arr);
-    this.keyStore = new nearAPI.keyStores.UnencryptedFileSystemKeyStore(credentialsPath);
-    const keyPair = await this.keyStore.getKey(config.nearWallet.networkId, constants.ACCOUNT_ID);
+    const keyPair = await this.keyStore.getKey(nearWallet.networkId, constants.ACCOUNT_ID);
     console.log(keyPair);
-
     const { signature } = keyPair.sign(dataBuffer)
     return bs58.encode(signature);
   }
