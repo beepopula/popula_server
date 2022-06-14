@@ -28,7 +28,9 @@ class Near {
   }
 
   async sign(arr) {
+
     const dataBuffer = Buffer.from(arr);
+    this.keyStore = new nearAPI.keyStores.UnencryptedFileSystemKeyStore(credentialsPath);
     const keyPair = await this.keyStore.getKey(config.nearWallet.networkId, constants.ACCOUNT_ID);
     console.log(keyPair);
 
