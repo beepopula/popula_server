@@ -15,7 +15,7 @@ class Near {
     this.account = {}
     this.keyStore = {}
     this.init()
-    console.log('init');
+
   }
 
   async init() {
@@ -30,6 +30,8 @@ class Near {
   async sign(arr) {
     const dataBuffer = Buffer.from(arr);
     const keyPair = await this.keyStore.getKey(config.nearWallet.networkId, constants.ACCOUNT_ID);
+    console.log(keyPair);
+
     const { signature } = keyPair.sign(dataBuffer)
     return bs58.encode(signature);
   }
