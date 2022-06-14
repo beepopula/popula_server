@@ -227,7 +227,7 @@ module.exports = function (app) {
       let encode = encrypt(JSON.stringify(content[item]))
       e[item] = encode
     }
-    let sign = await near.sign(e + nonce)
+    let sign = await near.sign(CryptoJS.SHA256(JSON.stringify(e) + nonce).toString())
     let r = {
       nonce: nonce,
       sign: sign,
@@ -243,7 +243,7 @@ module.exports = function (app) {
     let content = params.content
     let Post = ctx.model("post")
     let post = await Post.getRow({target_hash: postId})
-    let d ={}
+    let d = {}
     for (let item in content) {
       let decode = await decrypt(content[item])
       d[item] = JSON.parse(decode)
