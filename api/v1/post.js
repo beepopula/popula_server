@@ -226,7 +226,7 @@ module.exports = function (app) {
     for (let item in content) {
       console.log(item);
       console.log(content[item]);
-      let encode = encrypt(content[item])
+      let encode = encrypt(JSON.stringify(content[item]))
       e[item] = encode
     }
     let sign = await near.sign(e + nonce)
