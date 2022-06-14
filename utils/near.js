@@ -21,6 +21,7 @@ class Near {
   }
 
   async init() {
+    console.log(credentialsPath);
     this.keyStore = new nearAPI.keyStores.UnencryptedFileSystemKeyStore(credentialsPath);
     this.near = await nearAPI.connect({
       keyStore: this.keyStore,
@@ -33,7 +34,6 @@ class Near {
 
   async sign(arr) {
     const dataBuffer = Buffer.from(arr);
-    console.log(dataBuffer);
     const keyPair = await this.keyStore.getKey(nearWallet.networkId, constants.ACCOUNT_ID);
     const { signature } = keyPair.sign(dataBuffer)
     return bs58.encode(signature);
