@@ -242,11 +242,12 @@ module.exports = function (app) {
   app.post('/api/v1/post/getDeCodeContent', async (ctx, next) => {
     let params = ctx.params
     let postId = params.postId
-    let content = params.content
+    let content = params.content[item]
     let Post = ctx.model("post")
     let post = await Post.getRow({target_hash: postId})
     let d ={}
     for (let item in content) {
+      console.log(content[item]);
       let decode = decrypt(content[item])
       d[item] = decode
     }
