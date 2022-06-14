@@ -2,6 +2,7 @@ module.exports = function (app) {
   const utils = require("../../utils/utils.js")
   const near = require("../../utils/near.js")
   const CryptoJS = require('crypto-js');
+  const sha256 = require('js-sha256')
   const moment = require('moment')
   const config = require('config');
   const key = CryptoJS.enc.Utf8.parse(config.get('aes').key);
@@ -227,8 +228,8 @@ module.exports = function (app) {
       let encode = encrypt(JSON.stringify(content[item]))
       e[item] = encode
     }
-    let hash = CryptoJS.SHA256(JSON.stringify(e) + nonce).toString()
-    console.log(JSON.stringify(e))
+    let json = JSON.stringify(e)
+    let hash = sha256.array(json + nonce)
     console.log(hash)
     let sign = await near.sign(hash)
     let r = {
