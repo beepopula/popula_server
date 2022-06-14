@@ -248,7 +248,8 @@ module.exports = function (app) {
     let d ={}
     for (let item in content) {
       console.log(content[item]);
-      let decode = decrypt(content[item])
+      let decode = await decrypt(content[item])
+      console.log(decode);
       d[item] = decode
     }
 
