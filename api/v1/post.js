@@ -230,7 +230,6 @@ module.exports = function (app) {
     }
     let json = JSON.stringify(e)
     let hash = sha256.array(json + nonce)
-    console.log(hash)
     let sign = await near.sign(hash)
     let r = {
       nonce: nonce,
