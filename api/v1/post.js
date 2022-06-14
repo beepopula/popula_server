@@ -225,8 +225,8 @@ module.exports = function (app) {
     let e = {}
     for (let item in content) {
       console.log(item);
-      console.log(content['item']);
-      let encode = encrypt(content['item'])
+      console.log(content[item]);
+      let encode = encrypt(content[item])
       e[item] = encode
     }
     let sign = await near.sign(e + nonce)
@@ -247,7 +247,7 @@ module.exports = function (app) {
     let post = await Post.getRow({target_hash: postId})
     let d ={}
     for (let item in content) {
-      let decode = decrypt(content['item'])
+      let decode = decrypt(content[item])
       d[item] = decode
     }
 
