@@ -229,7 +229,7 @@ module.exports = function (app) {
     let r ={
       nonce:nonce,
       sign:sign,
-      encode:args
+      encode:encode
     }
      ctx.body = {code: '200', success: true, msg: 'ok', data: r}
   })
