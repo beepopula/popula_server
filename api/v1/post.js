@@ -224,12 +224,12 @@ module.exports = function (app) {
     let content = params.content   //{"text":"tt","imgs":[]}
     let e = {}
     for (let item in content) {
+      console.log(item);
+      console.log(content['item']);
       let encode = encrypt(content['item'])
       e[item] = encode
     }
-    console.log(e);
     let sign = await near.sign(e + nonce)
-
     let r = {
       nonce: nonce,
       sign: sign,
