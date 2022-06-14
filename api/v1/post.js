@@ -227,7 +227,9 @@ module.exports = function (app) {
       let encode = encrypt(JSON.stringify(content[item]))
       e[item] = encode
     }
-    let sign = await near.sign(CryptoJS.SHA256(JSON.stringify(e) + nonce).toString())
+    let hash = CryptoJS.SHA256(JSON.stringify(e) + nonce).toString()
+    console.log(hash)
+    let sign = await near.sign(hash)
     let r = {
       nonce: nonce,
       sign: sign,
