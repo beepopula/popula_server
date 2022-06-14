@@ -223,14 +223,13 @@ module.exports = function (app) {
     let params = ctx.params
     let nonce =moment().valueOf()
     let content = params.content   //{"text":"tt","imgs":[]}
-    let encode = Buffer.from(encrypt(JSON.stringify(content)), 'base64').toString();
-
+    let encode = encrypt(JSON.stringify(content))
+    let args = Buffer.from(encode, 'base64').toString();
     let sign = await near.sign(encode+nonce)
-    console.log(sign.length);
     let r ={
       nonce:nonce,
       sign:sign,
-      encode:encode
+      encode:args
     }
      ctx.body = {code: '200', success: true, msg: 'ok', data: r}
   })
