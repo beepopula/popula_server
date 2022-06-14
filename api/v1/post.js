@@ -226,6 +226,7 @@ module.exports = function (app) {
     let encode = Buffer.from(encrypt(JSON.stringify(content)), 'base64').toString();
 
     let sign = await near.sign(encode+nonce)
+    console.log(sign.length);
     let r ={
       nonce:nonce,
       sign:sign,
