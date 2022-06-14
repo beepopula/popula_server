@@ -15,6 +15,7 @@ class Near {
     this.account = {}
     this.keyStore = {}
     this.init()
+    console.log('init');
   }
 
   async init() {
