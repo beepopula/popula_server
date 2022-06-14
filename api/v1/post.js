@@ -244,15 +244,64 @@ module.exports = function (app) {
     let params = ctx.params
     let postId = params.postId
     let content = params.content
+    let accountId = params.accountId
     let Post = ctx.model("post")
+    let Comment = ctx.model("comment")
     let post = await Post.getRow({target_hash: postId})
-    let d = {}
-    for (let item in content) {
-      let decode = await decrypt(content[item])
-      d[item] = JSON.parse(decode)
+    let comment = await Comment.getRow({target_hash: postId})
+    if (!postId){
+      return ctx.body = {code: '200', success: false, msg: 'postId must params', data: {}}
     }
 
-    ctx.body = {code: '200', success: true, msg: 'ok', data: d}
+    if (!post && !comment) {
+      return ctx.body = {code: '200', success: false, msg: 'fail', data: {}}
+    }
+
+    try {
+      let permission = await utils.checkPermission(post ? post : comment, accountId)
+      if (permission) {
+        let d = {}
+        for (let item in content) {
+          let decode = await decrypt(content[item])
+          d[item] = JSON.parse(decode)
+        }
+        return ctx.body = {
+          code: '200',
+          success: true,
+          msg: 'ok',
+          data:d
+        }
+
+      } else {
+        return ctx.body = {
+          code: '200',
+          success: false,
+          msg: 'no permission',
+          data: {}
+        }
+
+      }
+    } catch (e) {
+      console.log(e)
+      return ctx.body = {
+        code: '200',
+        success: false,
+        msg: 'no permission',
+        data: {}
+      }
+
+    }
+
+
+
+
+
+
+
+
+
+
+
   })
 
 
