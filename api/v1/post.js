@@ -247,9 +247,7 @@ module.exports = function (app) {
     let post = await Post.getRow({target_hash: postId})
     let d ={}
     for (let item in content) {
-      console.log(content[item]);
       let decode = await decrypt(content[item])
-      console.log(decode);
       d[item] = JSON.parse(decode)
     }
 
@@ -306,13 +304,10 @@ module.exports = function (app) {
   }
 
   const decrypt = async (text) => {
-    console.log(text);
     let encryptedHexStr = CryptoJS.enc.Hex.parse(text);
     let srcs = CryptoJS.enc.Base64.stringify(encryptedHexStr);
     let decrypt = CryptoJS.AES.decrypt(srcs, key, {iv: iv, mode: CryptoJS.mode.CBC, padding: CryptoJS.pad.Pkcs7});
     let decryptedStr = decrypt.toString(CryptoJS.enc.Utf8);
-
-    console.log("r",decryptedStr.toString());
     return decryptedStr.toString();
   }
 
