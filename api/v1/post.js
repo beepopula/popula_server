@@ -309,6 +309,7 @@ module.exports = function (app) {
    // let srcs = CryptoJS.enc.Utf8.stringify(encryptedHexStr);
     let decrypt = CryptoJS.AES.decrypt(encryptedHexStr, key, {iv: iv, mode: CryptoJS.mode.CBC, padding: CryptoJS.pad.Pkcs7});
     let decryptedStr = decrypt.toString(CryptoJS.enc.Utf8);
+    console.log(decryptedStr.toString());
     return decryptedStr.toString();
   }
 
