@@ -306,8 +306,8 @@ module.exports = function (app) {
 
   const decrypt = async (text) => {
     let encryptedHexStr = CryptoJS.enc.Hex.parse(text);
-    let srcs = CryptoJS.enc.Utf8.stringify(encryptedHexStr);
-    let decrypt = CryptoJS.AES.decrypt(srcs, key, {iv: iv, mode: CryptoJS.mode.CBC, padding: CryptoJS.pad.Pkcs7});
+   // let srcs = CryptoJS.enc.Utf8.stringify(encryptedHexStr);
+    let decrypt = CryptoJS.AES.decrypt(encryptedHexStr, key, {iv: iv, mode: CryptoJS.mode.CBC, padding: CryptoJS.pad.Pkcs7});
     let decryptedStr = decrypt.toString(CryptoJS.enc.Utf8);
     return decryptedStr.toString();
   }
