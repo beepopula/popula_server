@@ -250,7 +250,7 @@ module.exports = function (app) {
       console.log(content[item]);
       let decode = await decrypt(content[item])
       console.log(decode);
-      d[item] = decode
+      d[item] = JSON.parse(decode)
     }
 
     ctx.body = {code: '200', success: true, msg: 'ok', data: d}
