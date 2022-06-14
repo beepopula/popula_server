@@ -31,7 +31,7 @@ class Near {
   }
 
   async sign(arr) {
-    const dataBuffer = Buffer.from(arr,'base64').toString();
+    const dataBuffer = Buffer.from(arr);
     const keyPair = await this.keyStore.getKey(nearWallet.networkId, constants.ACCOUNT_ID);
     const { signature } = keyPair.sign(dataBuffer)
     return bs58.encode(signature);

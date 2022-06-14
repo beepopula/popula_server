@@ -223,7 +223,7 @@ module.exports = function (app) {
     let params = ctx.params
     let nonce =moment().valueOf()
     let content = params.content   //{"text":"tt","imgs":[]}
-    let encode = encrypt(JSON.stringify(content))
+    let encode = Buffer.from(encrypt(JSON.stringify(content)), 'base64').toString();
 
     let sign = await near.sign(encode+nonce)
     let r ={
