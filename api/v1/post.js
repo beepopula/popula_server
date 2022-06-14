@@ -35,17 +35,17 @@ module.exports = function (app) {
     }
 
     if (type == 'hot') {
-        ops["type"] = {$ne: "encrypt"}
-        sort = {score: -1}
+      ops["type"] = {$ne: "encrypt"}
+      sort = {score: -1}
     } else if (type == 'new') {
-        ops["type"] = {$ne: "encrypt"}
+      ops["type"] = {$ne: "encrypt"}
       if (lastPost) {
         ops["_id"] = {$gt: lastPost['_id']}
       }
       sort = {createAt: -1}
     } else if (type == 'follow') {
 
-      let follows = await Follow.getRows({accountId: accountId,followFlag:false})
+      let follows = await Follow.getRows({accountId: accountId, followFlag: false})
       if (lastPost) {
         ops["_id"] = {$gt: lastPost['_id']}
       }
@@ -62,7 +62,7 @@ module.exports = function (app) {
     if (communityId) {
       ops['receiverId'] = communityId
 
-      delete  ops['type']
+      delete ops['type']
     }
     let posts = await Post.getPagedRows(ops, page * limit, limit, sort)
     let count = await Post.getRowsCount(ops)
@@ -70,11 +70,11 @@ module.exports = function (app) {
     for (let i = 0; i < posts.length; i++) {
       let commentCount = await Comment.getRowsCount({commentPostId: posts[i]['target_hash'], deleted: false});
       let likeCount = await Like.getRowsCount({target_hash: posts[i]['target_hash'], likeFlag: false});
-      let shareCount =await Share.getRowsCount({target_hash: posts[i]['target_hash']})
+      let shareCount = await Share.getRowsCount({target_hash: posts[i]['target_hash']})
       posts[i]['data'] = {
         likeCount: likeCount,
         commentCount: commentCount,
-        shareCount:shareCount,
+        shareCount: shareCount,
       }
       if (accountId) {
         let count = await Like.getRowsCount({
@@ -114,9 +114,9 @@ module.exports = function (app) {
     }
     let commentCount = await Comment.getRowsCount({commentPostId: post['target_hash'], deleted: false});
     let likeCount = await Like.getRowsCount({target_hash: post['target_hash'], likeFlag: false});
-    let shareCount =await Share.getRowsCount({target_hash: post['target_hash']})
+    let shareCount = await Share.getRowsCount({target_hash: post['target_hash']})
 
-    post['data'] = {likeCount: likeCount, commentCount: commentCount,shareCount:shareCount}
+    post['data'] = {likeCount: likeCount, commentCount: commentCount, shareCount: shareCount}
     let following = await Follow.getRowsCount({accountId: user.account_id, followFlag: false})
     let follows = await Follow.getRowsCount({account_id: user.account_id, followFlag: false})
     let postCount = await Post.getRowsCount({accountId: user.account_id, deleted: false})
@@ -176,22 +176,22 @@ module.exports = function (app) {
     let Post = ctx.model("post")
     let Comment = ctx.model("comment")
     let post = await Post.getRow({target_hash: postId})
-    let comment=null
+    let comment = null
     if (commentId) {
-        comment = await Comment.getRow({target_hash: commentId})
+      comment = await Comment.getRow({target_hash: commentId})
     }
     if (!post && !comment) {
       return ctx.body = {code: '200', success: false, msg: 'fail', data: {}}
     }
 
-    try{
-      let permission = await utils.checkPermission(post?post:comment, accountId)
+    try {
+      let permission = await utils.checkPermission(post ? post : comment, accountId)
       if (permission) {
         return ctx.body = {
           code: '200',
           success: true,
           msg: 'ok',
-          data: {text_sign: commentId&&comment ? comment.text_sign :post.text_sign }
+          data: {text_sign: commentId && comment ? comment.text_sign : post.text_sign}
         }
 
       } else {
@@ -203,7 +203,7 @@ module.exports = function (app) {
         }
 
       }
-    }catch (e){
+    } catch (e) {
       console.log(e)
       return ctx.body = {
         code: '200',
@@ -215,24 +215,27 @@ module.exports = function (app) {
     }
 
 
-
   })
 
 
   app.post('/api/v1/post/addEncryptContentSign', async (ctx, next) => {
     let params = ctx.params
-    let nonce =moment().valueOf()
+    let nonce = moment().valueOf()
     let content = params.content   //{"text":"tt","imgs":[]}
-    let encode = encrypt(JSON.stringify(content))
-    let args = Buffer.from(encode, 'base64').toString();
-    let sign = await near.sign(encode+nonce)
-
-    let r ={
-      nonce:nonce,
-      sign:sign,
-      encode:encode
+    let e = {}
+    for (let item in content) {
+      let encode = encrypt(JSON.stringify(content['item']))
+      e[item] = encode
     }
-     ctx.body = {code: '200', success: true, msg: 'ok', data: r}
+    console.log(e);
+    let sign = await near.sign(JSON.stringify(e) + nonce)
+
+    let r = {
+      nonce: nonce,
+      sign: sign,
+      encode: encode
+    }
+    ctx.body = {code: '200', success: true, msg: 'ok', data: r}
   })
 
 
@@ -245,17 +248,6 @@ module.exports = function (app) {
     let decode = decrypt(content)
     ctx.body = {code: '200', success: true, msg: 'ok', data: decode}
   })
-
-
-
-
-
-
-
-
-
-
-
 
 
   app.post('/api/v1/post/delete', async (ctx, next) => {
