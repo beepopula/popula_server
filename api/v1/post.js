@@ -224,11 +224,11 @@ module.exports = function (app) {
     let content = params.content   //{"text":"tt","imgs":[]}
     let e = {}
     for (let item in content) {
-      let encode = encrypt(JSON.stringify(content['item']))
+      let encode = encrypt(content['item'])
       e[item] = encode
     }
     console.log(e);
-    let sign = await near.sign(JSON.stringify(e) + nonce)
+    let sign = await near.sign(e + nonce)
 
     let r = {
       nonce: nonce,
@@ -245,8 +245,13 @@ module.exports = function (app) {
     let content = params.content
     let Post = ctx.model("post")
     let post = await Post.getRow({target_hash: postId})
-    let decode = decrypt(content)
-    ctx.body = {code: '200', success: true, msg: 'ok', data: decode}
+    let d ={}
+    for (let item in content) {
+      let decode = decrypt(content['item'])
+      d[item] = decode
+    }
+
+    ctx.body = {code: '200', success: true, msg: 'ok', data: d}
   })
 
 
