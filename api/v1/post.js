@@ -243,7 +243,6 @@ module.exports = function (app) {
   app.post('/api/v1/post/getDeCodeContent', async (ctx, next) => {
     let params = ctx.params
     let postId = params.postId
-    let content = params.content
     let accountId = params.accountId
     let Post = ctx.model("post")
     let Comment = ctx.model("comment")
@@ -260,6 +259,8 @@ module.exports = function (app) {
     try {
       let permission = await utils.checkPermission(post ? post : comment, accountId)
       if (permission) {
+        let m =post ? post : comment
+        let content =JSON.parse(m.encrypt_args)
         let d = {}
         for (let item in content) {
           let decode = await decrypt(content[item])
