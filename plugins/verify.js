@@ -5,9 +5,9 @@ const moment = require('moment')
 const verify = async (ctx, next) => {
   let fgYellow = "\x1b[33m%s\x1b[0m";
   let fgBlue = "\x1b[34m%s\x1b[0m";
-  let fgGreen ="\x1b[32m%s\x1b[0m";
+  let fgGreen = "\x1b[32m%s\x1b[0m";
 
-    let allow = [
+  let allow = [
     '/api/v1/comment/delete',
     '/api/v1/post/getSignByPostId',
     '/api/v1/post/delete',
@@ -18,7 +18,8 @@ const verify = async (ctx, next) => {
     '/api/v1/communities/contributor/update',
     '/api/v1/communities/contributor/add',
     '/api/v1/communities/contributor/delete',
-      '/api/v1/post/addEncryptContentSign'
+    '/api/v1/post/addEncryptContentSign',
+    '/api/v1/post/getDeCodeContent'
 
   ]
   let params = ctx.params
@@ -55,7 +56,7 @@ const verify = async (ctx, next) => {
           ctx.throw(401, e);
         }
 
-        if ((moment().valueOf()-timestamp)>60*1000*60){
+        if ((moment().valueOf() - timestamp) > 60 * 1000 * 60) {
           ctx.throw(401, 'time  expire');
         }
         // let doc = await User.getRow({account_id: account_id})
@@ -89,7 +90,7 @@ const verify = async (ctx, next) => {
       }
 
     }
-  }catch (e) {
+  } catch (e) {
     ctx.throw(401, e);
   }
 

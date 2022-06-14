@@ -233,21 +233,15 @@ module.exports = function (app) {
      ctx.body = {code: '200', success: true, msg: 'ok', data: r}
   })
 
-  const encrypt = (text) => {
-    let srcs = CryptoJS.enc.Utf8.parse(text);
-    let encrypted = CryptoJS.AES.encrypt(srcs, key, {iv: iv, mode: CryptoJS.mode.CBC, padding: CryptoJS.pad.Pkcs7});
-    return encrypted.ciphertext.toString().toUpperCase();
-  }
-
-  const decrypt = async (text) => {
-    let encryptedHexStr = CryptoJS.enc.Hex.parse(text);
-    let srcs = CryptoJS.enc.Base64.stringify(encryptedHexStr);
-    let decrypt = CryptoJS.AES.decrypt(srcs, key, {iv: iv, mode: CryptoJS.mode.CBC, padding: CryptoJS.pad.Pkcs7});
-    let decryptedStr = decrypt.toString(CryptoJS.enc.Utf8);
-    return decryptedStr.toString();
-  }
-
-
+  app.post('/api/v1/post/getDeCodeContent', async (ctx, next) => {
+    let params = ctx.params
+    let postId = params.postId
+    let content = params.content
+    let Post = ctx.model("post")
+    let post = await Post.getRow({target_hash: postId})
+    let decode = decrypt(content)
+    ctx.body = {code: '200', success: true, msg: 'ok', data: decode}
+  })
 
 
 
@@ -303,5 +297,19 @@ module.exports = function (app) {
 
   // })
 
+  const encrypt = (text) => {
+    let srcs = CryptoJS.enc.Utf8.parse(text);
+    let encrypted = CryptoJS.AES.encrypt(srcs, key, {iv: iv, mode: CryptoJS.mode.CBC, padding: CryptoJS.pad.Pkcs7});
+    return encrypted.ciphertext.toString().toUpperCase();
+  }
+
+  const decrypt = async (text) => {
+    let encryptedHexStr = CryptoJS.enc.Hex.parse(text);
+    let srcs = CryptoJS.enc.Base64.stringify(encryptedHexStr);
+    let decrypt = CryptoJS.AES.decrypt(srcs, key, {iv: iv, mode: CryptoJS.mode.CBC, padding: CryptoJS.pad.Pkcs7});
+    let decryptedStr = decrypt.toString(CryptoJS.enc.Utf8);
+    return decryptedStr.toString();
+  }
 
 }
+
