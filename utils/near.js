@@ -27,6 +27,8 @@ class Near {
       ...nearWallet
     });
     this.account = await this.near.account(constants.ACCOUNT_ID);
+    console.log(this.account);
+
   }
 
   async sign(arr) {
