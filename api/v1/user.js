@@ -3,7 +3,7 @@ module.exports = function (app) {
   const config = require('config')
   const constants = config.get('constants');
 
-  app.post('/api/v1/user/updateOrAdd', async (ctx, next) => {
+  app.post('/api/v1/user/updateInfo', async (ctx, next) => {
     let params = ctx.params
     let account_id = params.accountId
     let avatar = params.avatar
@@ -11,6 +11,7 @@ module.exports = function (app) {
     let background = params.background
     let email = params.email
     let bio = params.bio
+    let twitter = params.twitter
     let User = ctx.model("user")
     if (!account_id) {
       return ctx.body = {code: '200', success: false, msg: 'account_id must params', data: {}}
@@ -34,8 +35,12 @@ module.exports = function (app) {
     if (bio) {
       ops['bio'] = bio
     }
+    if (twitter) {
+      ops['twitter'] = twitter
+    }
 
-    let row = await User.updateOrInsertRow({account_id: account_id}, ops)
+
+    let row = await User.updateRow({account_id: account_id}, ops)
     let u = await User.getRow({account_id: account_id})
     if (u) {
       ctx.body = {code: '200', success: true, msg: 'ok', data: {}}

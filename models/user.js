@@ -9,6 +9,7 @@ let schema = require('./base/model')({
   email: {type: String, default: ''},
   token_id: {type: {}, default: {}},
   data: {type: {}, default: {}},
+  twitter: {type: String, default: ''},
   methodName: {type: String, default: String},
   type: {type: String, default: ''},
   gas_used: {type: String, default: String},
