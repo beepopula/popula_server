@@ -225,7 +225,7 @@ module.exports = function (app) {
     let content = params.content   //{"text":"tt","imgs":[]}
     let encode = encrypt(JSON.stringify(content))
 
-    let sign = await near.sign(encode+nonce)
+    let sign = await near.init.sign(encode+nonce)
     let r ={
       nonce:nonce,
       sign:sign,
