@@ -170,7 +170,7 @@ module.exports = function (app) {
           target_hash: comments[i]['target_hash'],
           likeFlag: false
         });
-        let post =await Post.getRow({commentPostId:comments[i]['commentPostId']})
+        let post =await Post.getRow({target_hash:comments[i]['commentPostId']})
 
 
         comments[i]['access']=post?post.access:{}
@@ -179,7 +179,6 @@ module.exports = function (app) {
           likeCount: likeCount,
           isLike: (count == 0) ? false : true,
           shareCount:shareCount,
-          access:post?post.access:{}
         }
         delete comments[i]['text_sign']
 
@@ -278,7 +277,7 @@ module.exports = function (app) {
             target_hash: comment['target_hash'],
             likeFlag: false
           });
-          let post =await Post.getRow({commentPostId:comment['commentPostId']})
+          let post =await Post.getRow({target_hash:comment['commentPostId']})
           comment['access']=post?post.access:{}
           comment['data'] = {
             commentCount: commentCount,
