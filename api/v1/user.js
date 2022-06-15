@@ -170,6 +170,8 @@ module.exports = function (app) {
           target_hash: comments[i]['target_hash'],
           likeFlag: false
         });
+        let post =await Post.getRow({commentPostId:comments[i]['commentPostId']})
+        comments[i]['access']=post?post.access:{}
         comments[i]['data'] = {
           commentCount: commentCount,
           likeCount: likeCount,
@@ -273,6 +275,8 @@ module.exports = function (app) {
             target_hash: comment['target_hash'],
             likeFlag: false
           });
+          let post =await Post.getRow({commentPostId:comment['commentPostId']})
+          comment['access']=post?post.access:{}
           comment['data'] = {
             commentCount: commentCount,
             likeCount: likeCount,
@@ -283,7 +287,7 @@ module.exports = function (app) {
           l.push(comment)
         }
       }
-      ctx.body = {code: '200', success: true, msg: 'ok', data: l, count: count}
+      ctx.body = {code: '200', success: true, msg: 'ok', data: l, count: l.length}
     } else {
       ctx.body = {code: '200', success: false, msg: 'fail', data: {}}
     }
