@@ -41,7 +41,7 @@ module.exports = function (app) {
     } else if (type == 'new') {
       ops["type"] = {$ne: "encrypt"}
       if (lastPost) {
-        ops["_id"] = {$lt: lastPost['_id']}
+        ops["_id"] = {$gt: lastPost['_id']}
       }
       sort = {createAt: -1}
     } else if (type == 'follow') {
