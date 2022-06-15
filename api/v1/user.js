@@ -289,7 +289,7 @@ module.exports = function (app) {
           l.push(comment)
         }
       }
-      ctx.body = {code: '200', success: true, msg: 'ok', data: l, count: l.length}
+      ctx.body = {code: '200', success: true, msg: 'ok', data: l, count: count}
     } else {
       ctx.body = {code: '200', success: false, msg: 'fail', data: {}}
     }

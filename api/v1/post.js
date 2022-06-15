@@ -245,12 +245,16 @@ module.exports = function (app) {
     let accountId = params.accountId
     let Post = ctx.model("post")
     let Comment = ctx.model("comment")
-    let post = await Post.getRow({target_hash: postId})
-    let comment = await Comment.getRow({target_hash: postId})
+
     if (!postId){
       return ctx.body = {code: '200', success: false, msg: 'postId must params', data: {}}
     }
 
+    let post = await Post.getRow({target_hash: postId})
+    let comment = await Comment.getRow({target_hash: postId})
+    if (comment){
+       post =await Post.getRow({target_hash:comment['commentPostId']})
+    }
     if (!post && !comment) {
       return ctx.body = {code: '200', success: false, msg: 'fail', data: {}}
     }
