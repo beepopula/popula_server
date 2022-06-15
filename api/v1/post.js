@@ -57,7 +57,6 @@ module.exports = function (app) {
       ops['accountId'] = {$in: followIds}
       sort = {createAt: -1}
     } else {
-
       sort = {createAt: -1}
     }
     if (communityId) {
