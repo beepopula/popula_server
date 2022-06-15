@@ -1,10 +1,13 @@
 let schema = require('./base/model')({
-    blockId: {type : Number, default : 0},
-    asyncFlag: { type : Boolean, default : false},
-    created: {type: Date, default: Date.now}
-}, "posts");
+  name: {type : String, default : ''},
+  finalBlockHeight: {type : Number, default : 0},
+  blockHeight: {type : Number, default : 0},
+  counter: {type : Number, default : 0},
+  asyncFlag: { type : Boolean, default : false},
+  debug: { type : Boolean, default : false},
+  createAt: {type: Date, default: Date.now}
+}, "blocks");
 
-schema.index({created: 1})
-schema.index({blockId: 1})
+schema.index({createAt: 1})
 
 module.exports = schema
