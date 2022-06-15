@@ -171,12 +171,15 @@ module.exports = function (app) {
           likeFlag: false
         });
         let post =await Post.getRow({commentPostId:comments[i]['commentPostId']})
+
+
         comments[i]['access']=post?post.access:{}
         comments[i]['data'] = {
           commentCount: commentCount,
           likeCount: likeCount,
           isLike: (count == 0) ? false : true,
-          shareCount:shareCount
+          shareCount:shareCount,
+          access:post?post.access:{}
         }
         delete comments[i]['text_sign']
 
