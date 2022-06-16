@@ -25,6 +25,8 @@ module.exports = function (app) {
         name:user&&user['name']?user['name']:'',
         account_id:follows[i]['accountId'],
         avatar:user&&user['avatar']?user['avatar']:'',
+        introduction:user&&user['introduction']?user['introduction']:'',
+        near:user&&user['near']?user['near']:'',
         isFollow: isFollow != 0 ? true : false,
       }
     }
@@ -55,6 +57,8 @@ module.exports = function (app) {
         name:user&&user['name']?user['name']:'',
         account_id:follows[i]['accountId'],
         avatar:user&&user['avatar']?user['avatar']:'',
+        introduction:user&&user['introduction']?user['introduction']:'',
+        near:user&&user['near']?user['near']:'',
         isFollow: isFollow != 0 ? true : false,
       }
     }

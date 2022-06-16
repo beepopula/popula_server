@@ -10,6 +10,8 @@ module.exports = function (app) {
     let name = params.name
     let background = params.background
     let email = params.email
+    let introduction = params.introduction
+    let near = params.near
     let bio = params.bio
     let twitter = params.twitter
     let User = ctx.model("user")
@@ -22,6 +24,12 @@ module.exports = function (app) {
     }
     if (name) {
       ops['name'] = name
+    }
+    if (introduction) {
+      ops['introduction'] = introduction
+    }
+    if (near) {
+      ops['near'] = near
     }
 
     if (background) {
