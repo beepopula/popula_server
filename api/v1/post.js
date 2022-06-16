@@ -252,7 +252,9 @@ module.exports = function (app) {
 
     let post = await Post.getRow({target_hash: postId})
     let comment = await Comment.getRow({target_hash: postId})
+    let m =post
     if (comment){
+        m=comment
        post =await Post.getRow({target_hash:comment['commentPostId']})
     }
     if (!post && !comment) {
@@ -262,7 +264,7 @@ module.exports = function (app) {
     try {
       let permission = await utils.checkPermission(post ? post : comment, accountId)
       if (permission) {
-        let m =post ? post : comment
+
         let content =JSON.parse(m.encrypt_args)
         let d = {}
         for (let item in content) {
