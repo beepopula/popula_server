@@ -15,10 +15,10 @@ module.exports = function (app) {
     let follows = await Follow.getPagedRows(ops,page*limit,limit,{createAt:-1})
 
     for (let i=0;i<follows.length;i++){
-      let user =await User.getRow({account_id:follows[i]['accountId']})
+      let user =await User.getRow({account_id:follows[i]['account_id']})
       let isFollow = await Follow.getRowsCount({
         accountId: currentAccountId,
-        account_id: follows[i]['accountId'],
+        account_id: follows[i]['account_id'],
         followFlag: false
       })
       follows[i]['data']={
