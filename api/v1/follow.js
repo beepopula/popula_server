@@ -23,7 +23,7 @@ module.exports = function (app) {
       })
       follows[i]['data']={
         name:user&&user['name']?user['name']:'',
-        account_id:follows[i]['accountId'],
+        account_id:follows[i]['account_id'],
         avatar:user&&user['avatar']?user['avatar']:'',
         introduction:user&&user['introduction']?user['introduction']:'',
         near:user&&user['near']?user['near']:'',
