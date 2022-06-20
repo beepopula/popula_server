@@ -20,7 +20,13 @@ const verify = async (ctx, next) => {
     '/api/v1/communities/contributor/delete',
     '/api/v1/post/addEncryptContentSign',
     '/api/v1/post/getDeCodeContent',
-    '/api/v1/user/updateInfo'
+    '/api/v1/user/updateInfo',
+    '/api/v1/communities/addBenefit',
+    '/api/v1/communities/updateBenefit',
+    '/api/v1/communities/deleteBenefit',
+    '/api/v1/communities/addNews',
+    '/api/v1/communities/updateNews',
+    '/api/v1/communities/deleteNews',
 
   ]
   let params = ctx.params
@@ -57,9 +63,9 @@ const verify = async (ctx, next) => {
           ctx.throw(401, e);
         }
 
-      /*  if ((moment().valueOf() - timestamp) > 60 * 1000 * 60) {
-          ctx.throw(401, 'time  expire');
-        }*/
+        /*  if ((moment().valueOf() - timestamp) > 60 * 1000 * 60) {
+            ctx.throw(401, 'time  expire');
+          }*/
         // let doc = await User.getRow({account_id: account_id})
         // if (!doc) {
         //   doc = {

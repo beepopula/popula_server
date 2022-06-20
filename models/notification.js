@@ -5,6 +5,7 @@ let schema = require('./base/model')({
   commentId: {type: String, default: ''},
   methodName: {type: String, default: ''},
   operation: {type: Boolean, default: false},
+  options: {type: [], default: []},
   type: {type: String, default: ''},
   comment: {type: {}, default: {}},
   post: {type: {}, default: {}},

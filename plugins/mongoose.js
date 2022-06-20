@@ -1,6 +1,6 @@
 let glob = require("glob")
 let util = require('util')
-let mongoose   = require('mongoose');
+let mongoose = require('mongoose');
 
 let middleware = module.exports = options => {
     mongoose = options.mongoose ? options.mongoose : mongoose

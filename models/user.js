@@ -5,6 +5,8 @@ let schema = require('./base/model')({
   public_key: {type: String, default: ''},
   avatar: {type: String, default: ''},
   bio: {type: String, default: ''},
+  introduction: {type: String, default: ''},
+  near: {type: String, default: ''},
   background: {type: String, default: ''},
   email: {type: String, default: ''},
   token_id: {type: {}, default: {}},

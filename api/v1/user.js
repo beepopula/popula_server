@@ -10,6 +10,8 @@ module.exports = function (app) {
     let name = params.name
     let background = params.background
     let email = params.email
+    let introduction = params.introduction
+    let near = params.near
     let bio = params.bio
     let twitter = params.twitter
     let User = ctx.model("user")
@@ -22,6 +24,12 @@ module.exports = function (app) {
     }
     if (name) {
       ops['name'] = name
+    }
+    if (introduction) {
+      ops['introduction'] = introduction
+    }
+    if (near) {
+      ops['near'] = near
     }
 
     if (background) {
@@ -170,11 +178,15 @@ module.exports = function (app) {
           target_hash: comments[i]['target_hash'],
           likeFlag: false
         });
+        let post =await Post.getRow({target_hash:comments[i]['commentPostId']})
+
+
+        comments[i]['access']=post?post.access:{}
         comments[i]['data'] = {
           commentCount: commentCount,
           likeCount: likeCount,
           isLike: (count == 0) ? false : true,
-          shareCount:shareCount
+          shareCount:shareCount,
         }
         delete comments[i]['text_sign']
 
@@ -273,6 +285,8 @@ module.exports = function (app) {
             target_hash: comment['target_hash'],
             likeFlag: false
           });
+          let post =await Post.getRow({target_hash:comment['commentPostId']})
+          comment['access']=post?post.access:{}
           comment['data'] = {
             commentCount: commentCount,
             likeCount: likeCount,
@@ -479,13 +493,14 @@ module.exports = function (app) {
   app.get('/api/v1/user/getNotifications', async (ctx, next) => {
     let params = ctx.params
     let accountId = params.accountId
-    let lastTime = params.lastTime
+    let lastTime = params.lastTime ?params.lastTime:moment().subtract(30, "days").valueOf()
     let Notification = ctx.model("notification")
     let User = ctx.model("user")
-    let q = {accountId: accountId, "$or":[{type:"comment"},{type:"post"}]}
+    let q = {"$or":[{accountId: accountId, "$or":[{type:"comment"},{type:"post"}]},{'options.At':accountId}]}
     if (lastTime) {
       q['createAt'] = {$gte: lastTime}
     }
+
     let n =[]
     let comments = await Notification.getRows(q,{createAt:-1})
     for (let i = 0; i < comments.length; i++) {
@@ -507,8 +522,17 @@ module.exports = function (app) {
       comments[i]['data']['type']='comment'
       comments[i]['data']['likes'] = likes;
       comments[i]['data']['count'] = likes.length;
+      comments[i]['data']['At']=null
+        if(comments[i]['options']){
+        for (let j =0;j<comments[i]['options'].length;j++){
+          if (accountId==comments[i]['options'][j]['At']){
+            comments[i]['data']['At']=comments[i]['options'][j]['At']
+          }
+        }
+        }
+
       if (comments[i]['type']=='post'){
-        if (likes.length!=0){
+        if (likes.length!=0||comments[i]['data']['At']!=null){
           n.push(comments[i])
         }
       } else {
