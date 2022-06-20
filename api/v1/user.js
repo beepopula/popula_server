@@ -522,7 +522,16 @@ module.exports = function (app) {
       comments[i]['data']['type']='comment'
       comments[i]['data']['likes'] = likes;
       comments[i]['data']['count'] = likes.length;
-      comments[i]['data']['At']=comments[i]['comment']&&comments[i]['comment']['options']&&comments[i]['comment']['options'].length>0?comments[i]['comment']['options']:[]
+        if(comments[i]['options']){
+        for (let j =0;j<comments[i]['options'].length;i++){
+          if (accountId==comments[i]['options'][j]['At']){
+            comments[i]['data']['At']=comments[i]['options'][j]['At']
+          }
+        }
+
+        }
+
+
       if (comments[i]['type']=='post'){
         if (likes.length!=0){
           n.push(comments[i])
