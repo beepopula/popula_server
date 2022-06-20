@@ -500,6 +500,7 @@ module.exports = function (app) {
     if (lastTime) {
       q['createAt'] = {$gte: lastTime}
     }
+
     let n =[]
     let comments = await Notification.getRows(q,{createAt:-1})
     for (let i = 0; i < comments.length; i++) {
