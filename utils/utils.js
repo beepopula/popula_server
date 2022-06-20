@@ -50,7 +50,7 @@ const checkCondition = async (condition,accountId) => {
   if (token_id != "near") {
     balance = new BN(await checkUserTokenBalance(accountId, token_id))
   } else {
-    balance = await near.getNearBalance(accountId)
+    balance =new BN( await near.getNearBalance(accountId))
   }
   if (balance.cmp(new BN(amount_to_access)) == -1) {
     return false
