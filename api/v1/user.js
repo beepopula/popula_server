@@ -521,7 +521,7 @@ module.exports = function (app) {
       comments[i]['data']['type']='comment'
       comments[i]['data']['likes'] = likes;
       comments[i]['data']['count'] = likes.length;
-      comments[i]['data']['At']=comments[i]['options'].length>0?comments[i]['options']:[]
+      comments[i]['data']['At']=comments[i]['options']&&comments[i]['options'].length>0?comments[i]['options']:[]
       if (comments[i]['type']=='post'){
         if (likes.length!=0){
           n.push(comments[i])
