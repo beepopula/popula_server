@@ -468,7 +468,7 @@ module.exports = function (app) {
 
   })
 
-  app.post('/api/v1/user/share', async (ctx, next) => {
+ /* app.post('/api/v1/user/share', async (ctx, next) => {
     let params = ctx.params
     let accountId = params.accountId
     let target_hash = params.target_hash
@@ -489,7 +489,7 @@ module.exports = function (app) {
       ctx.body = {code: '200', success: false, msg: 'fail', data: {}}
     }
 
-  })
+  })*/
   app.get('/api/v1/user/getNotifications', async (ctx, next) => {
     let params = ctx.params
     let accountId = params.accountId
