@@ -496,7 +496,7 @@ module.exports = function (app) {
     let lastTime = params.lastTime ?params.lastTime:moment().subtract(30, "days").valueOf()
     let Notification = ctx.model("notification")
     let User = ctx.model("user")
-    let q = {accountId: accountId, "$or":[{type:"comment"},{type:"post"},{'options.At':accountId}]}
+    let q = {"$or":[{accountId: accountId, "$or":[{type:"comment"},{type:"post"}]},{'options.At':accountId}]}
     if (lastTime) {
       q['createAt'] = {$gte: lastTime}
     }
