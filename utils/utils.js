@@ -45,12 +45,15 @@ const checkLayerConditions = async (encryptInfo,accountId) => {
 
 const checkCondition = async (condition,accountId) => {
   let token_id = condition['FTCondition'].token_id
+  let amount_to_access = condition['FTCondition'].amount_to_access
+  let balance = 0
   if (token_id != "near") {
-    let amount_to_access = condition['FTCondition'].amount_to_access
-    let balance = new BN(await checkUserTokenBalance(accountId, token_id))
-    if (balance.cmp(new BN(amount_to_access)) == -1) {
-      return false
-    }
+    balance = new BN(await checkUserTokenBalance(accountId, token_id))
+  } else {
+    balance = await near.getNearBalance(accountId)
+  }
+  if (balance.cmp(new BN(amount_to_access)) == -1) {
+    return false
   }
   return true
 }

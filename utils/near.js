@@ -46,13 +46,19 @@ class Near {
   }
 
 
-   async verifyAccountOwner(nearAccount, data, signature) {
+  async verifyAccountOwner(nearAccount, data, signature) {
     const accessKeys = await nearAccount.getAccessKeys()
     return accessKeys.some(it => {
       const publicKey = it.public_key.replace('ed25519:', '');
       return this.verifySignature(data, signature, publicKey)
     });
   };
+
+  async getNearBalance(accountId) {
+    const account = await this.near.account(accountId);
+    const balance = await account.getAccountBalance();
+    return balance.total
+  }
 }
 
 
