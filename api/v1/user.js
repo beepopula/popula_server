@@ -529,7 +529,6 @@ module.exports = function (app) {
             comments[i]['data']['At']=comments[i]['options'][j]['At']
           }
         }
-
         }
 
       if (comments[i]['type']=='post'){
