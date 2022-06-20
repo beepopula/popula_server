@@ -257,12 +257,12 @@ module.exports = function (app) {
         m=comment
        post =await Post.getRow({target_hash:comment['commentPostId']})
     }
-    if (!post && !comment) {
+    if (!post) {
       return ctx.body = {code: '200', success: false, msg: 'fail', data: {}}
     }
 
     try {
-      let permission = await utils.checkPermission(post ? post : comment, accountId)
+      let permission = await utils.checkPermission(post , accountId)
       if (permission) {
 
         let content =JSON.parse(m.encrypt_args)
