@@ -532,7 +532,6 @@ module.exports = function (app) {
 
         }
 
-
       if (comments[i]['type']=='post'){
         if (likes.length!=0||comments[i]['data']['At']!=null){
           n.push(comments[i])
