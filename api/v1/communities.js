@@ -3,6 +3,7 @@ module.exports = function (app) {
   const {Pool} = require('pg')
   const config = require('config')
   const constants = config.get('constants');
+ // import {ObjectId} from 'mongodb'
   app.get('/api/v1/communities/list', async (ctx, next) => {
     let params = ctx.params
     let accountId = params.accountId
@@ -131,7 +132,7 @@ module.exports = function (app) {
     let twitter = params.twitter
     let discord = params.discord
     let Community = ctx.model("communities")
-    let community = await Community.getRow({communityId: communityId})
+    let community = await Community.getRow({communityId: communityId, accountId: accountId})
     if (!community) {
       return ctx.body = {code: '200', success: false, msg: 'community not have', data: {},}
     }
@@ -170,15 +171,274 @@ module.exports = function (app) {
 
   })
 
+  app.post('/api/v1/communities/addBenefit', async (ctx, next) => {
+    let params = ctx.params
+    let communityId = params.communityId
+    let accountId = params.accountId
+    let title = params.title
+    let introduction = params.introduction
+    let type = params.type
+    let Community = ctx.model("communities")
+    let Benefit = ctx.model("benefit")
+
+    let community = await Community.getRow({communityId: communityId, accountId: accountId})
+    if (!community) {
+      return ctx.body = {code: '200', success: false, msg: 'community not have', data: {},}
+    }
+    let doc = {communityId: communityId}
+    if (title) {
+      doc['title'] = title
+    }
+    if (introduction) {
+      doc['introduction'] = introduction
+    }
+    if (type) {
+      doc['type'] = type
+    }
+
+    let update = await Benefit.createRow(doc)
+    let row = await Benefit.getRow(doc)
+    if (row) {
+      ctx.body = {code: '200', success: true, msg: 'ok', data: row}
+    } else {
+      ctx.body = {code: '201', success: false, msg: 'fail', data: {}}
+    }
+
+
+  })
+
+  app.get('/api/v1/communities/getBenefitList', async (ctx, next) => {
+    let params = ctx.params
+    let communityId = params.communityId
+    let accountId = params.accountId
+    let title = params.title
+    let introduction = params.introduction
+    let type = params.type
+    let Community = ctx.model("communities")
+    let Benefit = ctx.model("benefit")
+    let community = await Community.getRow({communityId: communityId, accountId: accountId})
+    if (!community) {
+      return ctx.body = {code: '200', success: false, msg: 'community not have', data: {},}
+    }
+    let row = await Benefit.getRows({communityId: communityId})
+    if (row) {
+      ctx.body = {code: '200', success: true, msg: 'ok', data: row}
+    } else {
+      ctx.body = {code: '201', success: false, msg: 'fail', data: {}}
+    }
+
+
+  })
+
+  app.post('/api/v1/communities/updateBenefit', async (ctx, next) => {
+    let params = ctx.params
+    let communityId = params.communityId
+    let accountId = params.accountId
+    let benefitId = params.benefitId
+    let title = params.title
+    let introduction = params.introduction
+    let type = params.type
+    let Community = ctx.model("communities")
+    let Benefit = ctx.model("benefit")
+    let community = await Community.getRow({communityId: communityId, accountId: accountId})
+    if (!community) {
+      return ctx.body = {code: '200', success: false, msg: 'community not have', data: {},}
+    }
+
+    let doc = {communityId: communityId}
+    if (title) {
+      doc['title'] = title
+    }
+    if (introduction) {
+      doc['introduction'] = introduction
+    }
+    if (type) {
+      doc['type'] = type
+    }
+
+
+    let row = await Benefit.updateRow({_id:mongoose.Types.ObjectId(benefitId)},doc)
+    if (row) {
+      ctx.body = {code: '200', success: true, msg: 'ok', data: row}
+    } else {
+      ctx.body = {code: '201', success: false, msg: 'fail', data: {}}
+    }
+
+
+  })
+
+  app.post('/api/v1/communities/deleteBenefit', async (ctx, next) => {
+    let params = ctx.params
+    let communityId = params.communityId
+    let accountId = params.accountId
+    let benefitId = params.benefitId
+    let Community = ctx.model("communities")
+    let Benefit = ctx.model("benefit")
+    let community = await Community.getRow({communityId: communityId, accountId: accountId})
+    if (!community) {
+      return ctx.body = {code: '200', success: false, msg: 'community not have', data: {},}
+    }
+    let row = await Benefit.deleteRow({_id:mongoose.Types.ObjectId(benefitId),communityId: communityId,})
+    if (row) {
+      ctx.body = {code: '200', success: true, msg: 'ok', data: row}
+    } else {
+      ctx.body = {code: '201', success: false, msg: 'fail', data: {}}
+    }
+
+
+  })
+
+  app.post('/api/v1/communities/addNews', async (ctx, next) => {
+    let params = ctx.params
+    let communityId = params.communityId
+    let accountId = params.accountId
+    let url = params.url
+    let title = params.title
+    let picture = params.picture
+    let creator = params.creator
+    let introduction = params.introduction
+    let time = params.time
+    let type = params.type
+    let Community = ctx.model("communities")
+    let News = ctx.model("news")
+
+    let community = await Community.getRow({communityId: communityId, accountId: accountId})
+    if (!community) {
+      return ctx.body = {code: '200', success: false, msg: 'community not have', data: {},}
+    }
+    let doc = {communityId: communityId}
+    if (url) {
+      doc['url'] = url
+    }
+    if (title) {
+      doc['title'] = title
+    }
+    if (picture) {
+      doc['picture'] = picture
+    }
+    if (introduction) {
+      doc['introduction'] = introduction
+    }
+    if (creator) {
+      doc['creator'] = creator
+    }
+    if (time) {
+      doc['time'] = time
+    }
+
+    let update = await News.createRow(doc)
+    let row = await News.getRow(doc)
+    if (row) {
+      ctx.body = {code: '200', success: true, msg: 'ok', data: row}
+    } else {
+      ctx.body = {code: '201', success: false, msg: 'fail', data: {}}
+    }
+
+
+  })
+
+  app.get('/api/v1/communities/getNewsList', async (ctx, next) => {
+    let params = ctx.params
+    let communityId = params.communityId
+    let accountId = params.accountId
+    let Community = ctx.model("communities")
+    let News = ctx.model("news")
+    let community = await Community.getRow({communityId: communityId, accountId: accountId})
+    if (!community) {
+      return ctx.body = {code: '200', success: false, msg: 'community not have', data: {},}
+    }
+    let row = await News.getRows({communityId: communityId})
+    if (row) {
+      ctx.body = {code: '200', success: true, msg: 'ok', data: row}
+    } else {
+      ctx.body = {code: '201', success: false, msg: 'fail', data: {}}
+    }
+
+
+  })
+
+
+  app.post('/api/v1/communities/updateNews', async (ctx, next) => {
+    let params = ctx.params
+    let communityId = params.communityId
+    let accountId = params.accountId
+    let newsId = params.newsId
+    let url = params.url
+    let title = params.title
+    let picture = params.picture
+    let creator = params.creator
+    let introduction = params.introduction
+    let time = params.time
+    let Community = ctx.model("communities")
+    let News = ctx.model("news")
+    let community = await Community.getRow({communityId: communityId, accountId: accountId})
+    if (!community) {
+      return ctx.body = {code: '200', success: false, msg: 'community not have', data: {},}
+    }
+    let doc = {communityId: communityId}
+    if (url) {
+      doc['url'] = url
+    }
+    if (title) {
+      doc['title'] = title
+    }
+    if (picture) {
+      doc['picture'] = picture
+    }
+    if (introduction) {
+      doc['introduction'] = introduction
+    }
+    if (creator) {
+      doc['creator'] = creator
+    }
+    if (time) {
+      doc['time'] = time
+    }
+
+    let row = await News.deleteRow({_id:mongoose.Types.ObjectId(newsId)},doc)
+    if (row) {
+      ctx.body = {code: '200', success: true, msg: 'ok', data: row}
+    } else {
+      ctx.body = {code: '201', success: false, msg: 'fail', data: {}}
+    }
+
+
+  })
+
+  app.post('/api/v1/communities/deleteNews', async (ctx, next) => {
+    let params = ctx.params
+    let communityId = params.communityId
+    let accountId = params.accountId
+    let newsId = params.newsId
+    let Community = ctx.model("communities")
+    let News = ctx.model("news")
+    let community = await Community.getRow({communityId: communityId, accountId: accountId})
+    if (!community) {
+      return ctx.body = {code: '200', success: false, msg: 'community not have', data: {},}
+    }
+    let row = await News.deleteRow({_id:mongoose.Types.ObjectId(newsId),communityId: communityId,})
+    if (row) {
+      ctx.body = {code: '200', success: true, msg: 'ok', data: row}
+    } else {
+      ctx.body = {code: '201', success: false, msg: 'fail', data: {}}
+    }
+
+
+  })
+
+
+
+
   app.post('/api/v1/communities/contributor/update', async (ctx, next) => {
     let params = ctx.params
     let communityId = params.communityId
     let accountId = params.accountId
+    let currentAccountId = params.currentAccountId
     let name = params.name
     let avatar = params.avatar
     let Community = ctx.model("communities")
     let Contributor = ctx.model("contributor")
-    let community = await Community.getRow({communityId: communityId})
+    let community = await Community.getRow({communityId: communityId, accountId: currentAccountId})
     if (!community) {
       return ctx.body = {code: '200', success: false, msg: 'community not have', data: {},}
     }
@@ -199,11 +459,12 @@ module.exports = function (app) {
     let params = ctx.params
     let communityId = params.communityId
     let accountId = params.accountId
+    let currentAccountId = params.currentAccountId
     let name = params.name
     let avatar = params.avatar
     let Community = ctx.model("communities")
     let Contributor = ctx.model("contributor")
-    let community = await Community.getRow({communityId: communityId})
+    let community = await Community.getRow({communityId: communityId, accountId: currentAccountId})
     if (!community) {
       return ctx.body = {code: '200', success: false, msg: 'community not have', data: {},}
     }
@@ -224,9 +485,10 @@ module.exports = function (app) {
     let params = ctx.params
     let communityId = params.communityId
     let accountId = params.accountId
+    let currentAccountId = params.currentAccountId
     let Community = ctx.model("communities")
     let Contributor = ctx.model("contributor")
-    let community = await Community.getRow({communityId: communityId})
+    let community = await Community.getRow({communityId: communityId, accountId: currentAccountId})
     if (!community) {
       return ctx.body = {code: '200', success: false, msg: 'community not have', data: {},}
     }

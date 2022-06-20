@@ -493,10 +493,10 @@ module.exports = function (app) {
   app.get('/api/v1/user/getNotifications', async (ctx, next) => {
     let params = ctx.params
     let accountId = params.accountId
-    let lastTime = params.lastTime
+    let lastTime = params.lastTime ?params.lastTime:moment().subtract(30, "days").valueOf()
     let Notification = ctx.model("notification")
     let User = ctx.model("user")
-    let q = {accountId: accountId, "$or":[{type:"comment"},{type:"post"}]}
+    let q = {accountId: accountId, "$or":[{type:"comment"},{type:"post"},{'options.At':accountId}]}
     if (lastTime) {
       q['createAt'] = {$gte: lastTime}
     }
@@ -521,6 +521,7 @@ module.exports = function (app) {
       comments[i]['data']['type']='comment'
       comments[i]['data']['likes'] = likes;
       comments[i]['data']['count'] = likes.length;
+      comments[i]['data']['At']=comments[i]['options'].length>0?comments[i]['options']:[]
       if (comments[i]['type']=='post'){
         if (likes.length!=0){
           n.push(comments[i])
