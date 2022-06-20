@@ -522,6 +522,7 @@ module.exports = function (app) {
       comments[i]['data']['type']='comment'
       comments[i]['data']['likes'] = likes;
       comments[i]['data']['count'] = likes.length;
+      comments[i]['data']['At']=null
         if(comments[i]['options']){
         for (let j =0;j<comments[i]['options'].length;j++){
           if (accountId==comments[i]['options'][j]['At']){
