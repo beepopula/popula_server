@@ -15,7 +15,7 @@ module.exports = function (app) {
     let instagram = params.instagram
     let youtube = params.youtube
     let tiktok = params.tiktok
-
+    let signature = params.signature
     let User = ctx.model("user")
     if (!account_id) {
       return ctx.body = {code: '200', success: false, msg: 'account_id must params', data: {}}
@@ -51,24 +51,36 @@ module.exports = function (app) {
       let data = await rp(options).catch(e => {
         console.log(e);
       });
-      console.log("twitter verified",data);
-
+      data=JSON.parse(data)
+      console.log("twitter verified",data.html);
+      console.log("twitter signature",signature);
+      ops['twitter']={}
       ops['twitter']['url'] = twitter
-      ops['twitter']['verified'] = false
+      if (!data.html.includes(signature)) {
+
+        console.log("twitter verified",false);
+        ops['twitter']['verified'] = false
+      }else {
+        console.log("twitter verified",true);
+        ops['twitter']['verified'] = true
+      }
+
     }
     if (instagram) {
+      ops['instagram']={}
       ops['instagram']['url'] = instagram
       ops['instagram']['verified'] = true
     }
     if (youtube) {
+      ops['youtube']={}
       ops['youtube']['url'] = youtube
       ops['youtube']['verified'] = true
     }
     if (tiktok) {
+      ops['tiktok']={}
       ops['tiktok']['url'] = tiktok
       ops['tiktok']['verified'] = true
     }
-
 
     let row = await User.updateRow({account_id: account_id}, ops)
     let u = await User.getRow({account_id: account_id})
