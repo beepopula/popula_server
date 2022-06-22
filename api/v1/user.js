@@ -18,7 +18,7 @@ module.exports = function (app) {
     let signature = params.signature
     let User = ctx.model("user")
     if (!account_id) {
-      return ctx.body = {code: '200', success: false, msg: 'account_id must params', data: {}}
+      return ctx.body = {code: '200', success: false, msg: 'accountId must params', data: {}}
     }
     let ops = {account_id: account_id}
     if (avatar) {
