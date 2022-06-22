@@ -79,6 +79,9 @@ module.exports = function (app) {
     if (!account_id) {
       return ctx.body = {code: '200', success: false, msg: 'accountId must params', data: {}}
     }
+    if (!twitter) {
+      return ctx.body = {code: '200', success: false, msg: 'twitter must params', data: {}}
+    }
     let ops = {account_id: account_id}
 
     if (twitter) {
@@ -106,8 +109,6 @@ module.exports = function (app) {
       } catch (e) {
         return ctx.body = {code: '201', success: false, msg: 'verify fail', data: {}}
       }
-
-
     }
 
     let row = await User.updateRow({account_id: account_id}, ops)
