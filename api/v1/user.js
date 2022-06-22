@@ -40,29 +40,35 @@ module.exports = function (app) {
       ops['bio'] = bio
     }
     if (twitter) {
+ try {
+   const url = `https://publish.twitter.com/oembed?url=${encodeURI(twitter)}`;
+   let options = {
+     method: 'GET',
+     url: url,
+     timeout: 10000
+   };
 
-      const url = `https://publish.twitter.com/oembed?url=${encodeURI(twitter)}`;
-      let options = {
-        method: 'GET',
-        url: url,
-        timeout: 10000
-      };
+   let data = await rp(options).catch(e => {
+     console.log(e);
+   });
+   data=JSON.parse(data)
+   console.log("twitter verified",data.html);
+   console.log("twitter signature",signature);
+   ops['twitter']={}
+   ops['twitter']['url'] = twitter
+   if (!data.html.includes(signature)) {
+     console.log("twitter verified",false);
+     ops['twitter']['verified'] = false
+   }else {
+     console.log("twitter verified",true);
+     ops['twitter']['verified'] = true
+   }
+ }catch (e) {
+   ops['twitter']={}
+   ops['twitter']['url'] = twitter
+   ops['twitter']['verified'] = false
+ }
 
-      let data = await rp(options).catch(e => {
-        console.log(e);
-      });
-      data=JSON.parse(data)
-      console.log("twitter verified",data.html);
-      console.log("twitter signature",signature);
-      ops['twitter']={}
-      ops['twitter']['url'] = twitter
-      if (!data.html.includes(signature)) {
-        console.log("twitter verified",false);
-        ops['twitter']['verified'] = false
-      }else {
-        console.log("twitter verified",true);
-        ops['twitter']['verified'] = true
-      }
 
     }
     if (instagram) {
