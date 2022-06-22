@@ -21,6 +21,7 @@ module.exports = function (app) {
       return ctx.body = {code: '200', success: false, msg: 'accountId must params', data: {}}
     }
     let ops = {account_id: account_id}
+    let u = await User.getRow({account_id: account_id})
     if (avatar) {
       ops['avatar'] = avatar
     }
@@ -39,25 +40,44 @@ module.exports = function (app) {
     if (bio) {
       ops['bio'] = bio
     }
+    ops['twitter'] = {}
     if (twitter) {
-      ops['twitter'] = {}
-      ops['twitter']['url'] = twitter
+      if (u['twitter'] && (twitter == u['twitter']['url'])){
+        ops['twitter']['url'] = u['twitter']['url']
+        ops['twitter']['verified'] = u['twitter']['verified']
+      }else {
+        ops['twitter']['url'] = twitter
+        ops['twitter']['verified'] = false
+      }
+
+    }else {
+      ops['twitter']['url'] = ""
       ops['twitter']['verified'] = false
     }
+    ops['instagram'] = {}
     if (instagram) {
-      ops['instagram'] = {}
       ops['instagram']['url'] = instagram
       ops['instagram']['verified'] = true
+    }else {
+      ops['instagram']['url'] = ""
+      ops['instagram']['verified'] = false
     }
+    ops['youtube'] = {}
     if (youtube) {
-      ops['youtube'] = {}
       ops['youtube']['url'] = youtube
       ops['youtube']['verified'] = true
+    }else {
+
+      ops['youtube']['url'] = ""
+      ops['youtube']['verified'] = false
     }
+    ops['tiktok'] = {}
     if (tiktok) {
-      ops['tiktok'] = {}
       ops['tiktok']['url'] = tiktok
       ops['tiktok']['verified'] = true
+    }else{
+      ops['tiktok']['url'] = ""
+      ops['tiktok']['verified'] = false
     }
 
     let row = await User.updateRow({account_id: account_id}, ops)
