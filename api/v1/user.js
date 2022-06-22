@@ -27,15 +27,6 @@ module.exports = function (app) {
     if (name) {
       ops['name'] = name
     }
-    if (instagram) {
-      ops['introduction'] = instagram
-    }
-    if (youtube) {
-      ops['near'] = youtube
-    }
-    if (tiktok) {
-      ops['near'] = tiktok
-    }
 
     if (background) {
       ops['background'] = background
@@ -49,8 +40,22 @@ module.exports = function (app) {
       ops['bio'] = bio
     }
     if (twitter) {
-      ops['twitter'] = twitter
+      ops['twitter']['url'] = twitter
+      ops['twitter']['verified'] = false
     }
+    if (instagram) {
+      ops['instagram']['url'] = instagram
+      ops['instagram']['verified'] = true
+    }
+    if (youtube) {
+      ops['youtube']['url'] = youtube
+      ops['youtube']['verified'] = true
+    }
+    if (tiktok) {
+      ops['tiktok']['url'] = tiktok
+      ops['tiktok']['verified'] = true
+    }
+
 
 
     let row = await User.updateRow({account_id: account_id}, ops)
