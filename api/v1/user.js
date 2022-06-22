@@ -117,7 +117,7 @@ module.exports = function (app) {
         if (!data.html.includes(sign)) {
           return ctx.body = {code: '201', success: false, msg: 'verify fail', data: {}}
         } else {
-          ops['twitter']['url'] = u['twitter']['url']
+          ops['twitter']['url'] =data.author_url
           ops['twitter']['verified'] = true
         }
 
