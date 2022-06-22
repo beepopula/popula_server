@@ -83,8 +83,8 @@ module.exports = function (app) {
       return ctx.body = {code: '200', success: false, msg: 'twitter must params', data: {}}
     }
     let ops = {account_id: account_id}
-
-    if (twitter) {
+    let u = await User.getRow({account_id: account_id})
+    if (twitter && u['twitter'] && (twitter == u['twitter']['url'])) {
       try {
         const url = `https://publish.twitter.com/oembed?url=${encodeURI(twitter)}`;
         let options = {
@@ -93,28 +93,24 @@ module.exports = function (app) {
           timeout: 10000
         };
         let data = await rp(options).catch(e => {
-          console.log(e);
+          return ctx.body = {code: '201', success: false, msg: 'verify fail', data: {}}
         });
         data = JSON.parse(data)
-        console.log("twitter verified", data.html);
-        console.log("twitter signature", sign);
         ops['twitter'] = {}
         ops['twitter']['url'] = twitter
         if (!data.html.includes(sign)) {
           return ctx.body = {code: '201', success: false, msg: 'verify fail', data: {}}
         } else {
-          console.log("twitter verified", true);
           ops['twitter']['verified'] = true
         }
+
+        let row = await User.updateRow({account_id: account_id}, ops)
+
+        return ctx.body = {code: '200', success: true, msg: 'ok', data: {}}
+
       } catch (e) {
         return ctx.body = {code: '201', success: false, msg: 'verify fail', data: {}}
       }
-    }
-
-    let row = await User.updateRow({account_id: account_id}, ops)
-    let u = await User.getRow({account_id: account_id})
-    if (u) {
-      ctx.body = {code: '200', success: true, msg: 'ok', data: {}}
     } else {
       return ctx.body = {code: '201', success: false, msg: 'verify fail', data: {}}
     }
