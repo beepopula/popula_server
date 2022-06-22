@@ -98,6 +98,11 @@ module.exports = function (app) {
     let isJoin = await Join.getRow({accountId: accountId, communityId: communityId, joinFlag: false})
     let user = await User.getRow({account_id: community['accountId']})
     let contributors = await Contributor.getRows({communityId: communityId})
+    for (let i=0;i<contributors.length;i++){
+      let user = await User.getRow({account_id:contributors[i].accountId})
+      contributors[i]['name']=user?user['name']:""
+      contributors[i]['avatar']=user?user['avatar']:""
+    }
     community['data'] = {
       postCount: postCount,
       membersCount: membersCount,
