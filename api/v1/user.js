@@ -81,7 +81,6 @@ module.exports = function (app) {
 
     let row = await User.updateRow({account_id: account_id}, ops)
     ctx.body = {code: '200', success: true, msg: 'ok', data: {}}
-
   })
 
   app.post('/api/v1/user/verifyTwitter', async (ctx, next) => {
