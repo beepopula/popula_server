@@ -74,7 +74,7 @@ module.exports = function (app) {
     let params = ctx.params
     let account_id = params.accountId
     let twitter = params.twitter
-    let signature = params.signature
+    let sign = params.sign
     let User = ctx.model("user")
     if (!account_id) {
       return ctx.body = {code: '200', success: false, msg: 'accountId must params', data: {}}
@@ -97,10 +97,10 @@ module.exports = function (app) {
         });
         data = JSON.parse(data)
         console.log("twitter verified", data.html);
-        console.log("twitter signature", signature);
+        console.log("twitter signature", sign);
         ops['twitter'] = {}
         ops['twitter']['url'] = twitter
-        if (!data.html.includes(signature)) {
+        if (!data.html.includes(sign)) {
           return ctx.body = {code: '201', success: false, msg: 'verify fail', data: {}}
         } else {
           console.log("twitter verified", true);
