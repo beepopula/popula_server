@@ -122,7 +122,6 @@ module.exports = function (app) {
         }
 
         let row = await User.updateRow({account_id: account_id}, ops)
-
         return ctx.body = {code: '200', success: true, msg: 'ok', data: {}}
 
       } catch (e) {
