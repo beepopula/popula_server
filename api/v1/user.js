@@ -80,12 +80,7 @@ module.exports = function (app) {
     }
 
     let row = await User.updateRow({account_id: account_id}, ops)
-    let u = await User.getRow({account_id: account_id})
-    if (u) {
-      ctx.body = {code: '200', success: true, msg: 'ok', data: {}}
-    } else {
-      ctx.body = {code: '200', success: false, msg: 'add fail', data: {}}
-    }
+    ctx.body = {code: '200', success: true, msg: 'ok', data: {}}
 
   })
 
