@@ -100,7 +100,7 @@ module.exports = function (app) {
     }
     let ops = {account_id: account_id}
     let u = await User.getRow({account_id: account_id})
-    if (twitter && u['twitter'] && (twitter == u['twitter']['url'])) {
+    if (twitter && u['twitter']) {
       try {
         const url = `https://publish.twitter.com/oembed?url=${encodeURI(twitter)}`;
         let options = {
@@ -113,7 +113,6 @@ module.exports = function (app) {
         });
         data = JSON.parse(data)
         ops['twitter'] = {}
-        ops['twitter']['url'] = twitter
         if (!data.html.includes(sign)) {
           return ctx.body = {code: '201', success: false, msg: 'verify fail', data: {}}
         } else {
