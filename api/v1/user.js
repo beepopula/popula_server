@@ -57,7 +57,6 @@ module.exports = function (app) {
       ops['twitter']={}
       ops['twitter']['url'] = twitter
       if (!data.html.includes(signature)) {
-
         console.log("twitter verified",false);
         ops['twitter']['verified'] = false
       }else {
