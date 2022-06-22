@@ -130,19 +130,22 @@ module.exports = function (app) {
         console.log(e);
       });
       console.log("twitter verified",data);
-
+      ops['twitter']={}
       ops['twitter']['url'] = twitter
       ops['twitter']['verified'] = false
     }
     if (instagram) {
+      ops['instagram']={}
       ops['instagram']['url'] = instagram
       ops['instagram']['verified'] = true
     }
     if (youtube) {
+      ops['youtube']={}
       ops['youtube']['url'] = youtube
       ops['youtube']['verified'] = true
     }
     if (tiktok) {
+      ops['tiktok']={}
       ops['tiktok']['url'] = tiktok
       ops['tiktok']['verified'] = true
     }
