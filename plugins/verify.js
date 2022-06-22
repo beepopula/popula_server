@@ -27,6 +27,7 @@ const verify = async (ctx, next) => {
     '/api/v1/communities/addNews',
     '/api/v1/communities/updateNews',
     '/api/v1/communities/deleteNews',
+    '/api/v1/user/verifyTwitter'
 
   ]
   let params = ctx.params

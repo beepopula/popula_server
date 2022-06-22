@@ -40,49 +40,22 @@ module.exports = function (app) {
       ops['bio'] = bio
     }
     if (twitter) {
- try {
-   const url = `https://publish.twitter.com/oembed?url=${encodeURI(twitter)}`;
-   let options = {
-     method: 'GET',
-     url: url,
-     timeout: 10000
-   };
-
-   let data = await rp(options).catch(e => {
-     console.log(e);
-   });
-   data=JSON.parse(data)
-   console.log("twitter verified",data.html);
-   console.log("twitter signature",signature);
-   ops['twitter']={}
-   ops['twitter']['url'] = twitter
-   if (!data.html.includes(signature)) {
-     console.log("twitter verified",false);
-     ops['twitter']['verified'] = false
-   }else {
-     console.log("twitter verified",true);
-     ops['twitter']['verified'] = true
-   }
- }catch (e) {
-   ops['twitter']={}
-   ops['twitter']['url'] = twitter
-   ops['twitter']['verified'] = false
- }
-
-
+      ops['twitter'] = {}
+      ops['twitter']['url'] = twitter
+      ops['twitter']['verified'] = false
     }
     if (instagram) {
-      ops['instagram']={}
+      ops['instagram'] = {}
       ops['instagram']['url'] = instagram
       ops['instagram']['verified'] = true
     }
     if (youtube) {
-      ops['youtube']={}
+      ops['youtube'] = {}
       ops['youtube']['url'] = youtube
       ops['youtube']['verified'] = true
     }
     if (tiktok) {
-      ops['tiktok']={}
+      ops['tiktok'] = {}
       ops['tiktok']['url'] = tiktok
       ops['tiktok']['verified'] = true
     }
@@ -93,6 +66,56 @@ module.exports = function (app) {
       ctx.body = {code: '200', success: true, msg: 'ok', data: {}}
     } else {
       ctx.body = {code: '200', success: false, msg: 'add fail', data: {}}
+    }
+
+  })
+
+  app.post('/api/v1/user/verifyTwitter', async (ctx, next) => {
+    let params = ctx.params
+    let account_id = params.accountId
+    let twitter = params.twitter
+    let signature = params.signature
+    let User = ctx.model("user")
+    if (!account_id) {
+      return ctx.body = {code: '200', success: false, msg: 'accountId must params', data: {}}
+    }
+    let ops = {account_id: account_id}
+
+    if (twitter) {
+      try {
+        const url = `https://publish.twitter.com/oembed?url=${encodeURI(twitter)}`;
+        let options = {
+          method: 'GET',
+          url: url,
+          timeout: 10000
+        };
+        let data = await rp(options).catch(e => {
+          console.log(e);
+        });
+        data = JSON.parse(data)
+        console.log("twitter verified", data.html);
+        console.log("twitter signature", signature);
+        ops['twitter'] = {}
+        ops['twitter']['url'] = twitter
+        if (!data.html.includes(signature)) {
+          return ctx.body = {code: '201', success: false, msg: 'verify fail', data: {}}
+        } else {
+          console.log("twitter verified", true);
+          ops['twitter']['verified'] = true
+        }
+      } catch (e) {
+        return ctx.body = {code: '201', success: false, msg: 'verify fail', data: {}}
+      }
+
+
+    }
+
+    let row = await User.updateRow({account_id: account_id}, ops)
+    let u = await User.getRow({account_id: account_id})
+    if (u) {
+      ctx.body = {code: '200', success: true, msg: 'ok', data: {}}
+    } else {
+      return ctx.body = {code: '201', success: false, msg: 'verify fail', data: {}}
     }
 
   })
@@ -148,37 +171,37 @@ module.exports = function (app) {
       let data = await rp(options).catch(e => {
         console.log(e);
       });
-      data=JSON.parse(data)
-      console.log("twitter verified",data);
+      data = JSON.parse(data)
+      console.log("twitter verified", data);
       if (!data.html.includes(signature)) {
-      /*  ctx.status = 200;
-        ctx.body = {success: false,};
-        return*/
-        console.log("twitter verified",data.html);
-        console.log("twitter signature",signature);
-        console.log("twitter verified",false);
-      }else {
-        console.log("twitter verified",data.html);
-        console.log("twitter signature",signature);
+        /*  ctx.status = 200;
+          ctx.body = {success: false,};
+          return*/
+        console.log("twitter verified", data.html);
+        console.log("twitter signature", signature);
+        console.log("twitter verified", false);
+      } else {
+        console.log("twitter verified", data.html);
+        console.log("twitter signature", signature);
       }
 
 
-      ops['twitter']={}
+      ops['twitter'] = {}
       ops['twitter']['url'] = twitter
       ops['twitter']['verified'] = false
     }
     if (instagram) {
-      ops['instagram']={}
+      ops['instagram'] = {}
       ops['instagram']['url'] = instagram
       ops['instagram']['verified'] = true
     }
     if (youtube) {
-      ops['youtube']={}
+      ops['youtube'] = {}
       ops['youtube']['url'] = youtube
       ops['youtube']['verified'] = true
     }
     if (tiktok) {
-      ops['tiktok']={}
+      ops['tiktok'] = {}
       ops['tiktok']['url'] = tiktok
       ops['tiktok']['verified'] = true
     }
@@ -272,19 +295,21 @@ module.exports = function (app) {
       //row['data']['joinedCount'] = count
       ctx.body = {code: '200', success: true, msg: 'ok', data: row}
     } else {
-      ctx.body = {code: '200', success: true, msg: 'fail', data: {
-        account_id: accountId,
-        public_key: "",
-        create_time: new Date(),
-        avatar: "",
-        bio: "",
-        background: "",
-        email: "",
-        following: [],
-        followers: [],
-        media: [],
-        actions: []
-      }}
+      ctx.body = {
+        code: '200', success: true, msg: 'fail', data: {
+          account_id: accountId,
+          public_key: "",
+          create_time: new Date(),
+          avatar: "",
+          bio: "",
+          background: "",
+          email: "",
+          following: [],
+          followers: [],
+          media: [],
+          actions: []
+        }
+      }
     }
   })
 
@@ -302,27 +327,30 @@ module.exports = function (app) {
     let ops = {account_id: accountId}
     let row = await User.getRow(ops)
     if (row) {
-      let comments = await Comment.getPagedRows({accountId: accountId,deleted:false}, page * limit, limit, {createAt: -1})
-      let count = await Comment.getRowsCount({accountId: accountId,deleted:false})
+      let comments = await Comment.getPagedRows({
+        accountId: accountId,
+        deleted: false
+      }, page * limit, limit, {createAt: -1})
+      let count = await Comment.getRowsCount({accountId: accountId, deleted: false})
       for (let i = 0; i < comments.length; i++) {
         let commentCount = await Comment.getRowsCount({postId: comments[i]['target_hash'], deleted: false});
         let likeCount = await Like.getRowsCount({target_hash: comments[i]['target_hash'], likeFlag: false});
-        let shareCount =await Share.getRowsCount({target_hash: comments[i]['target_hash']})
+        let shareCount = await Share.getRowsCount({target_hash: comments[i]['target_hash']})
 
         let count = await Like.getRowsCount({
           accountId: currentAccountId,
           target_hash: comments[i]['target_hash'],
           likeFlag: false
         });
-        let post =await Post.getRow({target_hash:comments[i]['commentPostId']})
+        let post = await Post.getRow({target_hash: comments[i]['commentPostId']})
 
 
-        comments[i]['access']=post?post.access:{}
+        comments[i]['access'] = post ? post.access : {}
         comments[i]['data'] = {
           commentCount: commentCount,
           likeCount: likeCount,
           isLike: (count == 0) ? false : true,
-          shareCount:shareCount,
+          shareCount: shareCount,
         }
         delete comments[i]['text_sign']
 
@@ -347,12 +375,12 @@ module.exports = function (app) {
     let ops = {account_id: accountId}
     let row = await User.getRow(ops)
     if (row) {
-      let posts = await Post.getPagedRows({accountId: accountId,deleted:false}, page * limit, limit, {createAt: -1})
-      let count = await Post.getRowsCount({accountId: accountId,deleted:false})
+      let posts = await Post.getPagedRows({accountId: accountId, deleted: false}, page * limit, limit, {createAt: -1})
+      let count = await Post.getRowsCount({accountId: accountId, deleted: false})
       for (let i = 0; i < posts.length; i++) {
         let commentCount = await Comment.getRowsCount({postId: posts[i]['target_hash'], deleted: false});
         let likeCount = await Like.getRowsCount({target_hash: posts[i]['target_hash'], likeFlag: false});
-        let shareCount =await Share.getRowsCount({target_hash: posts[i]['target_hash']})
+        let shareCount = await Share.getRowsCount({target_hash: posts[i]['target_hash']})
 
         let count = await Like.getRowsCount({
           accountId: currentAccountId,
@@ -363,7 +391,7 @@ module.exports = function (app) {
           commentCount: commentCount,
           likeCount: likeCount,
           isLike: (count == 0) ? false : true,
-          shareCount:shareCount
+          shareCount: shareCount
         }
         delete posts[i]['text_sign']
 
@@ -392,12 +420,12 @@ module.exports = function (app) {
       let count = await Like.getRowsCount({accountId: accountId, likeFlag: false})
       let l = []
       for (let i = 0; i < likes.length; i++) {
-        let post = await Post.getRow({target_hash: likes[i].target_hash,deleted:false})
-        let comment = await Comment.getRow({target_hash: likes[i].target_hash,deleted:false})
+        let post = await Post.getRow({target_hash: likes[i].target_hash, deleted: false})
+        let comment = await Comment.getRow({target_hash: likes[i].target_hash, deleted: false})
         if (post) {
           let commentCount = await Comment.getRowsCount({postId: post['target_hash'], deleted: false});
           let likeCount = await Like.getRowsCount({target_hash: post['target_hash'], likeFlag: false});
-          let shareCount =await Share.getRowsCount({target_hash: post['target_hash']})
+          let shareCount = await Share.getRowsCount({target_hash: post['target_hash']})
           let count = await Like.getRowsCount({
             accountId: currentAccountId,
             target_hash: post['target_hash'],
@@ -407,7 +435,7 @@ module.exports = function (app) {
             commentCount: commentCount,
             likeCount: likeCount,
             isLike: (count == 0) ? false : true,
-            shareCount:shareCount
+            shareCount: shareCount
           }
           delete post['text_sign']
           l.push(post)
@@ -415,19 +443,19 @@ module.exports = function (app) {
         if (comment) {
           let commentCount = await Comment.getRowsCount({postId: comment['target_hash'], deleted: false});
           let likeCount = await Like.getRowsCount({target_hash: comment['target_hash'], likeFlag: false});
-          let shareCount =await Share.getRowsCount({target_hash: comment['target_hash']})
+          let shareCount = await Share.getRowsCount({target_hash: comment['target_hash']})
           let count = await Like.getRowsCount({
             accountId: currentAccountId,
             target_hash: comment['target_hash'],
             likeFlag: false
           });
-          let post =await Post.getRow({target_hash:comment['commentPostId']})
-          comment['access']=post?post.access:{}
+          let post = await Post.getRow({target_hash: comment['commentPostId']})
+          comment['access'] = post ? post.access : {}
           comment['data'] = {
             commentCount: commentCount,
             likeCount: likeCount,
             isLike: (count == 0) ? false : true,
-            shareCount:shareCount
+            shareCount: shareCount
           }
           delete comment['text_sign']
           l.push(comment)
@@ -495,9 +523,9 @@ module.exports = function (app) {
     let members = await Join.getPagedRows({accountId: accountId, joinFlag: false}, page * limit, limit, {weight: -1});
     let count = await Join.getRowsCount({accountId: accountId, joinFlag: false});
     let d = []
-    if(members.length==0){
+    if (members.length == 0) {
       members.push({
-        "communityId" : constants.MAIN_CONTRACT,
+        "communityId": constants.MAIN_CONTRACT,
       })
     }
     for (let i = 0; i < members.length; i++) {
@@ -604,71 +632,71 @@ module.exports = function (app) {
 
   })
 
- /* app.post('/api/v1/user/share', async (ctx, next) => {
-    let params = ctx.params
-    let accountId = params.accountId
-    let target_hash = params.target_hash
-    let Share = ctx.model("share")
-    let User = ctx.model("user")
-    let ops = {account_id: accountId}
-    let row = await User.getRow(ops)
-    if (!row || !target_hash) {
-      return ctx.body = {code: '201', success: false, msg: 'accountId  or target_hash not have', data: {}}
-    }
-    let doc = {accountId: accountId, target_hash: target_hash}
+  /* app.post('/api/v1/user/share', async (ctx, next) => {
+     let params = ctx.params
+     let accountId = params.accountId
+     let target_hash = params.target_hash
+     let Share = ctx.model("share")
+     let User = ctx.model("user")
+     let ops = {account_id: accountId}
+     let row = await User.getRow(ops)
+     if (!row || !target_hash) {
+       return ctx.body = {code: '201', success: false, msg: 'accountId  or target_hash not have', data: {}}
+     }
+     let doc = {accountId: accountId, target_hash: target_hash}
 
-    let u = await Share.createRow(doc)
-    let r = await Share.getRow(doc)
-    if (r) {
-      ctx.body = {code: '200', success: true, msg: 'ok', data: {}}
-    } else {
-      ctx.body = {code: '200', success: false, msg: 'fail', data: {}}
-    }
+     let u = await Share.createRow(doc)
+     let r = await Share.getRow(doc)
+     if (r) {
+       ctx.body = {code: '200', success: true, msg: 'ok', data: {}}
+     } else {
+       ctx.body = {code: '200', success: false, msg: 'fail', data: {}}
+     }
 
-  })*/
+   })*/
   app.get('/api/v1/user/getNotifications', async (ctx, next) => {
     let params = ctx.params
     let accountId = params.accountId
-    let lastTime = params.lastTime ?params.lastTime:moment().subtract(30, "days").valueOf()
+    let lastTime = params.lastTime ? params.lastTime : moment().subtract(30, "days").valueOf()
     let Notification = ctx.model("notification")
     let User = ctx.model("user")
-    let q = {"$or":[{accountId: accountId, "$or":[{type:"comment"},{type:"post"}]},{'options.At':accountId}]}
+    let q = {"$or": [{accountId: accountId, "$or": [{type: "comment"}, {type: "post"}]}, {'options.At': accountId}]}
     if (lastTime) {
       q['createAt'] = {$gte: lastTime}
     }
 
-    let n =[]
-    let comments = await Notification.getRows(q,{createAt:-1})
+    let n = []
+    let comments = await Notification.getRows(q, {createAt: -1})
     for (let i = 0; i < comments.length; i++) {
       let q = {type: "like", target_hash: comments[i].target_hash}
       if (lastTime) {
         q['createAt'] = {$gte: lastTime}
       }
-      let likes = await Notification.getRows(q,{createAt:-1})
-      for (let i=0;i<likes.length;i++){
-        let user =await User.getRow({account_id:likes[i]['accountId']})
-        likes[i]['data']={
-          name:user&&user['name']?user['name']:'',
-          account_id:likes[i]['accountId'],
-          avatar:user&&user['avatar']?user['avatar']:''
+      let likes = await Notification.getRows(q, {createAt: -1})
+      for (let i = 0; i < likes.length; i++) {
+        let user = await User.getRow({account_id: likes[i]['accountId']})
+        likes[i]['data'] = {
+          name: user && user['name'] ? user['name'] : '',
+          account_id: likes[i]['accountId'],
+          avatar: user && user['avatar'] ? user['avatar'] : ''
         }
       }
 
       comments[i]['data'] = {}
-      comments[i]['data']['type']='comment'
+      comments[i]['data']['type'] = 'comment'
       comments[i]['data']['likes'] = likes;
       comments[i]['data']['count'] = likes.length;
-      comments[i]['data']['At']=null
-        if(comments[i]['options']){
-        for (let j =0;j<comments[i]['options'].length;j++){
-          if (accountId==comments[i]['options'][j]['At']){
-            comments[i]['data']['At']=comments[i]['options'][j]['At']
+      comments[i]['data']['At'] = null
+      if (comments[i]['options']) {
+        for (let j = 0; j < comments[i]['options'].length; j++) {
+          if (accountId == comments[i]['options'][j]['At']) {
+            comments[i]['data']['At'] = comments[i]['options'][j]['At']
           }
         }
-        }
+      }
 
-      if (comments[i]['type']=='post'){
-        if (likes.length!=0||comments[i]['data']['At']!=null){
+      if (comments[i]['type'] == 'post') {
+        if (likes.length != 0 || comments[i]['data']['At'] != null) {
           n.push(comments[i])
         }
       } else {
@@ -680,26 +708,26 @@ module.exports = function (app) {
     if (lastTime) {
       fq['createAt'] = {$gte: lastTime}
     }
-    let follows = await Notification.getRows(fq,{createAt:-1})
+    let follows = await Notification.getRows(fq, {createAt: -1})
 
-    for (let i=0;i<follows.length;i++){
-      let user =await User.getRow({account_id:follows[i]['accountId']})
-      follows[i]['data']={
-        name:user&&user['name']?user['name']:'',
-        account_id:follows[i]['accountId'],
-        avatar:user&&user['avatar']?user['avatar']:''
+    for (let i = 0; i < follows.length; i++) {
+      let user = await User.getRow({account_id: follows[i]['accountId']})
+      follows[i]['data'] = {
+        name: user && user['name'] ? user['name'] : '',
+        account_id: follows[i]['accountId'],
+        avatar: user && user['avatar'] ? user['avatar'] : ''
       }
     }
 
-    if (follows.length>0){
+    if (follows.length > 0) {
       n.push({
-        type:'follow',
-        data:{
-          type:'follow',
+        type: 'follow',
+        data: {
+          type: 'follow',
           follow: follows,
           count: follows.length
         },
-        createAt:follows[0].createAt
+        createAt: follows[0].createAt
       })
 
     }
