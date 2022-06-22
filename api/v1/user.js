@@ -112,10 +112,12 @@ module.exports = function (app) {
           return ctx.body = {code: '201', success: false, msg: 'verify fail', data: {}}
         });
         data = JSON.parse(data)
+        console.log(data);
         ops['twitter'] = {}
         if (!data.html.includes(sign)) {
           return ctx.body = {code: '201', success: false, msg: 'verify fail', data: {}}
         } else {
+          ops['twitter']['url'] = u['twitter']['url']
           ops['twitter']['verified'] = true
         }
 
@@ -133,101 +135,6 @@ module.exports = function (app) {
   })
 
 
-  app.post('/api/v1/user/test/updateInfo', async (ctx, next) => {
-    let params = ctx.params
-    let account_id = params.accountId
-    let avatar = params.avatar
-    let name = params.name
-    let background = params.background
-    let email = params.email
-    let bio = params.bio
-    let twitter = params.twitter
-    let instagram = params.instagram
-    let youtube = params.youtube
-    let tiktok = params.tiktok
-    let signature = params.signature
-
-
-    let User = ctx.model("user")
-    if (!account_id) {
-      return ctx.body = {code: '200', success: false, msg: 'account_id must params', data: {}}
-    }
-    let ops = {account_id: account_id}
-    if (avatar) {
-      ops['avatar'] = avatar
-    }
-    if (name) {
-      ops['name'] = name
-    }
-
-    if (background) {
-      ops['background'] = background
-    }
-
-    if (email) {
-      ops['email'] = email
-    }
-
-    if (bio) {
-      ops['bio'] = bio
-    }
-    if (twitter) {
-
-      const url = `https://publish.twitter.com/oembed?url=${encodeURI(twitter)}`;
-      let options = {
-        method: 'GET',
-        url: url,
-        timeout: 10000
-      };
-
-      let data = await rp(options).catch(e => {
-        console.log(e);
-      });
-      data = JSON.parse(data)
-      console.log("twitter verified", data);
-      if (!data.html.includes(signature)) {
-        /*  ctx.status = 200;
-          ctx.body = {success: false,};
-          return*/
-        console.log("twitter verified", data.html);
-        console.log("twitter signature", signature);
-        console.log("twitter verified", false);
-      } else {
-        console.log("twitter verified", data.html);
-        console.log("twitter signature", signature);
-      }
-
-
-      ops['twitter'] = {}
-      ops['twitter']['url'] = twitter
-      ops['twitter']['verified'] = false
-    }
-    if (instagram) {
-      ops['instagram'] = {}
-      ops['instagram']['url'] = instagram
-      ops['instagram']['verified'] = true
-    }
-    if (youtube) {
-      ops['youtube'] = {}
-      ops['youtube']['url'] = youtube
-      ops['youtube']['verified'] = true
-    }
-    if (tiktok) {
-      ops['tiktok'] = {}
-      ops['tiktok']['url'] = tiktok
-      ops['tiktok']['verified'] = true
-    }
-
-
-    let row = await User.updateRow({account_id: account_id}, ops)
-    let u = await User.getRow({account_id: account_id})
-    if (u) {
-      ctx.body = {code: '200', success: true, msg: 'ok', data: {}}
-    } else {
-      ctx.body = {code: '200', success: false, msg: 'add fail', data: {}}
-    }
-
-  })
 
   app.post('/api/v1/user/login', async (ctx, next) => {
     let params = ctx.params
