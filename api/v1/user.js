@@ -49,7 +49,6 @@ module.exports = function (app) {
         ops['twitter']['url'] = twitter
         ops['twitter']['verified'] = false
       }
-
     }else {
       ops['twitter']['url'] = ""
       ops['twitter']['verified'] = false
