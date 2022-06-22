@@ -93,6 +93,8 @@ module.exports = function (app) {
     let instagram = params.instagram
     let youtube = params.youtube
     let tiktok = params.tiktok
+    let signature = params.signature
+
 
     let User = ctx.model("user")
     if (!account_id) {
@@ -129,7 +131,19 @@ module.exports = function (app) {
       let data = await rp(options).catch(e => {
         console.log(e);
       });
+      data=JSON.parse(data)
       console.log("twitter verified",data);
+      if (!data.html.includes(signature)) {
+      /*  ctx.status = 200;
+        ctx.body = {success: false,};
+        return*/
+        console.log("twitter verified",false);
+      }else {
+        console.log("twitter verified",data);
+        console.log("twitter signature",signature);
+      }
+
+
       ops['twitter']={}
       ops['twitter']['url'] = twitter
       ops['twitter']['verified'] = false
