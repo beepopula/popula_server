@@ -22,6 +22,9 @@ module.exports = function (app) {
     }
     let ops = {account_id: account_id}
     let u = await User.getRow({account_id: account_id})
+    if (!u){
+      return ctx.body = {code: '200', success: false, msg: 'fail', data: {}}
+    }
     if (avatar) {
       ops['avatar'] = avatar
     }
