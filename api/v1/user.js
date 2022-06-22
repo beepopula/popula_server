@@ -137,9 +137,11 @@ module.exports = function (app) {
       /*  ctx.status = 200;
         ctx.body = {success: false,};
         return*/
+        console.log("twitter verified",data.html);
+        console.log("twitter signature",signature);
         console.log("twitter verified",false);
       }else {
-        console.log("twitter verified",data);
+        console.log("twitter verified",data.html);
         console.log("twitter signature",signature);
       }
 
