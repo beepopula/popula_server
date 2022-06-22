@@ -2,7 +2,7 @@ module.exports = function (app) {
   const moment = require('moment')
   const config = require('config')
   const constants = config.get('constants');
-
+  let rp = require("request-promise")
   app.post('/api/v1/user/updateInfo', async (ctx, next) => {
     let params = ctx.params
     let account_id = params.accountId
@@ -40,6 +40,19 @@ module.exports = function (app) {
       ops['bio'] = bio
     }
     if (twitter) {
+
+      const url = `https://publish.twitter.com/oembed?url=${encodeURI(twitter)}`;
+      let options = {
+        method: 'GET',
+        url: url,
+        timeout: 10000
+      };
+
+      let data = await rp(options).catch(e => {
+        console.log(e);
+      });
+      console.log("twitter verified",data);
+
       ops['twitter']['url'] = twitter
       ops['twitter']['verified'] = false
     }
@@ -55,7 +68,6 @@ module.exports = function (app) {
       ops['tiktok']['url'] = tiktok
       ops['tiktok']['verified'] = true
     }
-
 
 
     let row = await User.updateRow({account_id: account_id}, ops)
