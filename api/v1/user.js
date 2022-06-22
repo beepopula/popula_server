@@ -10,10 +10,12 @@ module.exports = function (app) {
     let name = params.name
     let background = params.background
     let email = params.email
-    let introduction = params.introduction
-    let near = params.near
     let bio = params.bio
     let twitter = params.twitter
+    let instagram = params.instagram
+    let youtube = params.youtube
+    let tiktok = params.tiktok
+
     let User = ctx.model("user")
     if (!account_id) {
       return ctx.body = {code: '200', success: false, msg: 'account_id must params', data: {}}
@@ -25,11 +27,14 @@ module.exports = function (app) {
     if (name) {
       ops['name'] = name
     }
-    if (introduction) {
-      ops['introduction'] = introduction
+    if (instagram) {
+      ops['introduction'] = instagram
     }
-    if (near) {
-      ops['near'] = near
+    if (youtube) {
+      ops['near'] = youtube
+    }
+    if (tiktok) {
+      ops['near'] = tiktok
     }
 
     if (background) {
