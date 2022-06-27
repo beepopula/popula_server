@@ -252,10 +252,8 @@ module.exports = function (app) {
       n = benefits
     }
     let doc = {communityId: communityId}
+    await Benefit.deleteRow({communityId: communityId})
     for (let i = 0; i < n.length; i++) {
-      if (n[i]._id) {
-        doc['_id'] = n[i]._id ? mongoose.Types.ObjectId(n[i]._id) : ""
-      }
       doc['title'] = n[i].title ? n[i].title : ""
       doc['type'] = n[i].type ? n[i].type : ""
       doc['introduction'] = n[i].introduction ? n[i].introduction : ""
@@ -374,10 +372,9 @@ module.exports = function (app) {
       n = news
     }
     let doc = {communityId: communityId}
+    await News.deleteRow({communityId: communityId})
     for (let i = 0; i < n.length; i++) {
-      if (n[i]._id) {
-        doc['_id'] = n[i]._id ? mongoose.Types.ObjectId(n[i]._id) : ""
-      }
+
       doc['url'] = n[i].url ? n[i].url : ""
       doc['title'] = n[i].title ? n[i].title : ""
       doc['picture'] = n[i].picture ? n[i].picture : ""
@@ -432,14 +429,15 @@ module.exports = function (app) {
       c = contributors
     }
 
+    await Contributor.deleteRow({communityId: communityId})
     for (let i = 0; i < c.length; i++) {
       let update = await Contributor.updateOrInsertRow({
         communityId: communityId,
         accountId: c[i]
       }, {communityId: communityId, accountId: c[i]})
     }
-    let update = await Community.updateRow({communityId: communityId}, {information: information})
 
+    let update = await Community.updateRow({communityId: communityId}, {information: information})
     let updateContributor = await Contributor.getRow({communityId: communityId, accountId: accountId})
     ctx.body = {code: '200', success: true, msg: 'ok', data: updateContributor}
 
