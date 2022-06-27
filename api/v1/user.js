@@ -40,9 +40,7 @@ module.exports = function (app) {
       ops['email'] = email
     }
 
-    if (bio) {
-      ops['bio'] = bio
-    }
+    ops['bio'] = bio
     ops['twitter'] = {}
     if (twitter) {
       if (u['twitter'] && (twitter == u['twitter']['url'])){

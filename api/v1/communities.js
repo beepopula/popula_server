@@ -3,7 +3,7 @@ module.exports = function (app) {
   const {Pool} = require('pg')
   const config = require('config')
   const constants = config.get('constants');
- // import {ObjectId} from 'mongodb'
+  // import {ObjectId} from 'mongodb'
   app.get('/api/v1/communities/list', async (ctx, next) => {
     let params = ctx.params
     let accountId = params.accountId
@@ -98,10 +98,10 @@ module.exports = function (app) {
     let isJoin = await Join.getRow({accountId: accountId, communityId: communityId, joinFlag: false})
     let user = await User.getRow({account_id: community['accountId']})
     let contributors = await Contributor.getRows({communityId: communityId})
-    for (let i=0;i<contributors.length;i++){
-      let user = await User.getRow({account_id:contributors[i].accountId})
-      contributors[i]['name']=user?user['name']:""
-      contributors[i]['avatar']=user?user['avatar']:""
+    for (let i = 0; i < contributors.length; i++) {
+      let user = await User.getRow({account_id: contributors[i].accountId})
+      contributors[i]['name'] = user ? user['name'] : ""
+      contributors[i]['avatar'] = user ? user['avatar'] : ""
     }
     community['data'] = {
       postCount: postCount,
@@ -154,21 +154,19 @@ module.exports = function (app) {
     if (info) {
       doc['info'] = info
     }
-    if (information) {
-      doc['information'] = information
-    }
-    if (website) {
-      doc['website'] = website
-    }
-    if (governance) {
-      doc['governance'] = governance
-    }
-    if (twitter) {
-      doc['twitter'] = twitter
-    }
-    if (discord) {
-      doc['discord'] = discord
-    }
+
+    /*    if (website) {
+          doc['website'] = {}
+        }
+        if (governance) {
+          doc['governance'] =  {}
+        }
+        if (twitter) {
+          doc['twitter'] =  {}
+        }
+        if (discord) {
+          doc['discord'] =  {}
+        }*/
     let update = await Community.updateRow({communityId: communityId}, doc)
     let updateCommunity = await Community.getRow({communityId: communityId})
     updateCommunity['data'] = {}
@@ -239,7 +237,7 @@ module.exports = function (app) {
     let params = ctx.params
     let communityId = params.communityId
     let accountId = params.accountId
-    let benefitId = params.benefitId
+    let benefits = params.benefits
     let title = params.title
     let introduction = params.introduction
     let type = params.type
@@ -249,26 +247,22 @@ module.exports = function (app) {
     if (!community) {
       return ctx.body = {code: '200', success: false, msg: 'community not have', data: {},}
     }
-
+    let n = []
+    if (Array.isArray(benefits)) {
+      n = benefits
+    }
     let doc = {communityId: communityId}
-    if (title) {
-      doc['title'] = title
-    }
-    if (introduction) {
-      doc['introduction'] = introduction
-    }
-    if (type) {
-      doc['type'] = type
-    }
+    for (let i = 0; i < n.length; i++) {
+      if (n[i]._id) {
+        doc['_id'] = n[i]._id ? mongoose.Types.ObjectId(n[i]._id) : ""
+      }
+      doc['title'] = n[i].title ? n[i].title : ""
+      doc['type'] = n[i].type ? n[i].type : ""
+      doc['introduction'] = n[i].introduction ? n[i].introduction : ""
 
-
-    let row = await Benefit.updateRow({_id:mongoose.Types.ObjectId(benefitId)},doc)
-    if (row) {
-      ctx.body = {code: '200', success: true, msg: 'ok', data: row}
-    } else {
-      ctx.body = {code: '201', success: false, msg: 'fail', data: {}}
+      let row = await Benefit.updateOrInsertRow(doc, doc)
     }
-
+    ctx.body = {code: '200', success: true, msg: 'ok', data: row}
 
   })
 
@@ -283,7 +277,7 @@ module.exports = function (app) {
     if (!community) {
       return ctx.body = {code: '200', success: false, msg: 'community not have', data: {},}
     }
-    let row = await Benefit.deleteRow({_id:mongoose.Types.ObjectId(benefitId),communityId: communityId,})
+    let row = await Benefit.deleteRow({_id: mongoose.Types.ObjectId(benefitId), communityId: communityId,})
     if (row) {
       ctx.body = {code: '200', success: true, msg: 'ok', data: row}
     } else {
@@ -367,45 +361,33 @@ module.exports = function (app) {
     let params = ctx.params
     let communityId = params.communityId
     let accountId = params.accountId
-    let newsId = params.newsId
-    let url = params.url
-    let title = params.title
-    let picture = params.picture
-    let creator = params.creator
-    let introduction = params.introduction
-    let time = params.time
+    let news = params.news
     let Community = ctx.model("communities")
     let News = ctx.model("news")
     let community = await Community.getRow({communityId: communityId, accountId: accountId})
     if (!community) {
       return ctx.body = {code: '200', success: false, msg: 'community not have', data: {},}
     }
+
+    let n = []
+    if (Array.isArray(news)) {
+      n = news
+    }
     let doc = {communityId: communityId}
-    if (url) {
-      doc['url'] = url
-    }
-    if (title) {
-      doc['title'] = title
-    }
-    if (picture) {
-      doc['picture'] = picture
-    }
-    if (introduction) {
-      doc['introduction'] = introduction
-    }
-    if (creator) {
-      doc['creator'] = creator
-    }
-    if (time) {
-      doc['time'] = time
+    for (let i = 0; i < n.length; i++) {
+      if (n[i]._id) {
+        doc['_id'] = n[i]._id ? mongoose.Types.ObjectId(n[i]._id) : ""
+      }
+      doc['url'] = n[i].url ? n[i].url : ""
+      doc['title'] = n[i].title ? n[i].title : ""
+      doc['picture'] = n[i].picture ? n[i].picture : ""
+      doc['introduction'] = n[i].introduction ? n[i].introduction : ""
+      doc['creator'] = n[i].creator ? n[i].creator : ""
+      doc['time'] = n[i].time ? n[i].time : ""
+      let row = await News.updateOrInsertRow(doc, doc)
     }
 
-    let row = await News.deleteRow({_id:mongoose.Types.ObjectId(newsId)},doc)
-    if (row) {
-      ctx.body = {code: '200', success: true, msg: 'ok', data: row}
-    } else {
-      ctx.body = {code: '201', success: false, msg: 'fail', data: {}}
-    }
+    ctx.body = {code: '200', success: true, msg: 'ok', data: row}
 
 
   })
@@ -421,7 +403,7 @@ module.exports = function (app) {
     if (!community) {
       return ctx.body = {code: '200', success: false, msg: 'community not have', data: {},}
     }
-    let row = await News.deleteRow({_id:mongoose.Types.ObjectId(newsId),communityId: communityId,})
+    let row = await News.deleteRow({_id: mongoose.Types.ObjectId(newsId), communityId: communityId,})
     if (row) {
       ctx.body = {code: '200', success: true, msg: 'ok', data: row}
     } else {
@@ -432,29 +414,32 @@ module.exports = function (app) {
   })
 
 
-
-
   app.post('/api/v1/communities/contributor/update', async (ctx, next) => {
     let params = ctx.params
     let communityId = params.communityId
     let accountId = params.accountId
     let currentAccountId = params.currentAccountId
-    let name = params.name
-    let avatar = params.avatar
+    let information = params.information
+    let contributors = params.contributors
     let Community = ctx.model("communities")
     let Contributor = ctx.model("contributor")
     let community = await Community.getRow({communityId: communityId, accountId: currentAccountId})
     if (!community) {
       return ctx.body = {code: '200', success: false, msg: 'community not have', data: {},}
     }
-    let doc = {}
-    if (name) {
-      doc['name'] = name
+    let c = []
+    if (Array.isArray(contributors)) {
+      c = contributors
     }
-    if (avatar) {
-      doc['avatar'] = avatar
+
+    for (let i = 0; i < c.length; i++) {
+      let update = await Contributor.updateOrInsertRow({
+        communityId: communityId,
+        accountId: c[i]
+      }, {communityId: communityId, accountId: c[i]})
     }
-    let update = await Contributor.updateRow({communityId: communityId, accountId: accountId}, doc)
+    let update = await Community.updateRow({communityId: communityId}, {information: information})
+
     let updateContributor = await Contributor.getRow({communityId: communityId, accountId: accountId})
     ctx.body = {code: '200', success: true, msg: 'ok', data: updateContributor}
 
