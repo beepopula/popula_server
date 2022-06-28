@@ -130,6 +130,40 @@ module.exports = function (app) {
     }
 
   })
+  app.get('/api/v1/user/verifyHtml', async (ctx, next) => {
+    let params = ctx.params
+    let account_id = params.accountId
+    let twitter = params.twitter
+
+    try {
+      const url = `https://www.theblockbeats.info/flash/89448`;
+      let options = {
+        method: 'GET',
+        url: url,
+        timeout: 10000
+      };
+      let data = await rp(options).catch(e => {
+        return ctx.body = {code: '201', success: false, msg: 'verify fail', data: {}}
+      });
+      console.log(data);
+      data = JSON.parse(data)
+      console.log(data);
+      ops['twitter'] = {}
+      if (!data.html.includes(sign)) {
+        return ctx.body = {code: '201', success: false, msg: 'verify fail', data: {}}
+      } else {
+        ops['twitter']['url'] =data.author_url
+        ops['twitter']['verified'] = true
+      }
+
+      let row = await User.updateRow({account_id: account_id}, ops)
+      return ctx.body = {code: '200', success: true, msg: 'ok', data: {}}
+
+    } catch (e) {
+      return ctx.body = {code: '201', success: false, msg: 'verify fail', data: {}}
+    }
+
+  })
 
 
 
