@@ -154,7 +154,6 @@ module.exports = function (app) {
       data = JSON.parse(data)
       console.log(data);
       return ctx.body = {code: '200', success: true, msg: 'ok', data: {}}
-
     } catch (e) {
       console.log(e)
       return ctx.body = {code: '201', success: false, msg: 'verify fail', data: {}}
