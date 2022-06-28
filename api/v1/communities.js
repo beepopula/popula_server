@@ -420,7 +420,7 @@ module.exports = function (app) {
     let contributors = params.contributors
     let Community = ctx.model("communities")
     let Contributor = ctx.model("contributor")
-    let community = await Community.getRow({communityId: communityId, accountId: currentAccountId})
+    let community = await Community.getRow({communityId: communityId, accountId: accountId})
     if (!community) {
       return ctx.body = {code: '200', success: false, msg: 'community not have', data: {},}
     }
