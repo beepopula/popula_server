@@ -57,7 +57,7 @@ module.exports = function (app) {
     ops['instagram'] = {}
     if (instagram) {
       ops['instagram']['url'] = instagram
-      ops['instagram']['verified'] = true
+      ops['instagram']['verified'] = false
     }else {
       ops['instagram']['url'] = ""
       ops['instagram']['verified'] = false
@@ -65,7 +65,7 @@ module.exports = function (app) {
     ops['youtube'] = {}
     if (youtube) {
       ops['youtube']['url'] = youtube
-      ops['youtube']['verified'] = true
+      ops['youtube']['verified'] = false
     }else {
 
       ops['youtube']['url'] = ""
@@ -74,7 +74,7 @@ module.exports = function (app) {
     ops['tiktok'] = {}
     if (tiktok) {
       ops['tiktok']['url'] = tiktok
-      ops['tiktok']['verified'] = true
+      ops['tiktok']['verified'] = false
     }else{
       ops['tiktok']['url'] = ""
       ops['tiktok']['verified'] = false
@@ -120,7 +120,11 @@ module.exports = function (app) {
         }
 
         let row = await User.updateRow({account_id: account_id}, ops)
-        return ctx.body = {code: '200', success: true, msg: 'ok', data: {}}
+        return ctx.body = {code: '200', success: true, msg: 'ok', data: {
+            author_url:data.author_url,
+            author_name:data.author_name,
+            url :data.url,
+          }}
 
       } catch (e) {
         return ctx.body = {code: '201', success: false, msg: 'verify fail', data: {}}
