@@ -260,7 +260,7 @@ module.exports = function (app) {
 
       let row = await Benefit.updateOrInsertRow(doc, doc)
     }
-    ctx.body = {code: '200', success: true, msg: 'ok', data: row}
+    ctx.body = {code: '200', success: true, msg: 'ok', data: {}}
 
   })
 
