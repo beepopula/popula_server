@@ -253,13 +253,11 @@ module.exports = function (app) {
     }
 
     await Benefit.deleteRow({communityId: communityId})
-    console.log("n.length ",n.length);
     for (let i = 0; i < n.length; i++) {
       let doc = {communityId: communityId}
       doc['title'] = n[i].title ? n[i].title : ""
       doc['type'] = n[i].type ? n[i].type : ""
       doc['introduction'] = n[i].introduction ? n[i].introduction : ""
-      console.log(doc);
       let row = await Benefit.updateOrInsertRow(doc, doc)
     }
     ctx.body = {code: '200', success: true, msg: 'ok', data: {}}
@@ -373,10 +371,10 @@ module.exports = function (app) {
     if (Array.isArray(news)) {
       n = news
     }
-    let doc = {communityId: communityId}
+
     await News.deleteRow({communityId: communityId})
     for (let i = 0; i < n.length; i++) {
-
+      let doc = {communityId: communityId}
       doc['url'] = n[i].url ? n[i].url : ""
       doc['title'] = n[i].title ? n[i].title : ""
       doc['picture'] = n[i].picture ? n[i].picture : ""
