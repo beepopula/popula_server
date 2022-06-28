@@ -251,10 +251,11 @@ module.exports = function (app) {
     if (Array.isArray(benefits)) {
       n = benefits
     }
-    let doc = {communityId: communityId}
+
     await Benefit.deleteRow({communityId: communityId})
     console.log("n.length ",n.length);
     for (let i = 0; i < n.length; i++) {
+      let doc = {communityId: communityId}
       doc['title'] = n[i].title ? n[i].title : ""
       doc['type'] = n[i].type ? n[i].type : ""
       doc['introduction'] = n[i].introduction ? n[i].introduction : ""
