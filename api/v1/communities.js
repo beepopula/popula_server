@@ -438,7 +438,7 @@ module.exports = function (app) {
     }
 
     let update = await Community.updateRow({communityId: communityId}, {information: information})
-    let updateContributor = await Contributor.getRow({communityId: communityId, accountId: accountId})
+    let updateContributor = await Contributor.getRows({communityId: communityId})
     ctx.body = {code: '200', success: true, msg: 'ok', data: updateContributor}
 
   })
