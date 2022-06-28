@@ -251,16 +251,16 @@ module.exports = function (app) {
     if (Array.isArray(benefits)) {
       n = benefits
     }
-    let doc = {communityId: communityId}
+
     await Benefit.deleteRow({communityId: communityId})
     for (let i = 0; i < n.length; i++) {
+      let doc = {communityId: communityId}
       doc['title'] = n[i].title ? n[i].title : ""
       doc['type'] = n[i].type ? n[i].type : ""
       doc['introduction'] = n[i].introduction ? n[i].introduction : ""
-
       let row = await Benefit.updateOrInsertRow(doc, doc)
     }
-    ctx.body = {code: '200', success: true, msg: 'ok', data: row}
+    ctx.body = {code: '200', success: true, msg: 'ok', data: {}}
 
   })
 
@@ -371,10 +371,10 @@ module.exports = function (app) {
     if (Array.isArray(news)) {
       n = news
     }
-    let doc = {communityId: communityId}
+
     await News.deleteRow({communityId: communityId})
     for (let i = 0; i < n.length; i++) {
-
+      let doc = {communityId: communityId}
       doc['url'] = n[i].url ? n[i].url : ""
       doc['title'] = n[i].title ? n[i].title : ""
       doc['picture'] = n[i].picture ? n[i].picture : ""
@@ -384,8 +384,7 @@ module.exports = function (app) {
       let row = await News.updateOrInsertRow(doc, doc)
     }
 
-    ctx.body = {code: '200', success: true, msg: 'ok', data: row}
-
+    ctx.body = {code: '200', success: true, msg: 'ok', data:{}}
 
   })
 
@@ -417,10 +416,10 @@ module.exports = function (app) {
     let accountId = params.accountId
     let currentAccountId = params.currentAccountId
     let information = params.information
-    let contributors = params.contributors
+    let contributors = params.contributor
     let Community = ctx.model("communities")
     let Contributor = ctx.model("contributor")
-    let community = await Community.getRow({communityId: communityId, accountId: currentAccountId})
+    let community = await Community.getRow({communityId: communityId, accountId: accountId})
     if (!community) {
       return ctx.body = {code: '200', success: false, msg: 'community not have', data: {},}
     }
@@ -438,7 +437,7 @@ module.exports = function (app) {
     }
 
     let update = await Community.updateRow({communityId: communityId}, {information: information})
-    let updateContributor = await Contributor.getRow({communityId: communityId, accountId: accountId})
+    let updateContributor = await Contributor.getRows({communityId: communityId})
     ctx.body = {code: '200', success: true, msg: 'ok', data: updateContributor}
 
   })
