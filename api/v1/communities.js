@@ -253,11 +253,12 @@ module.exports = function (app) {
     }
     let doc = {communityId: communityId}
     await Benefit.deleteRow({communityId: communityId})
+    console.log("n.length ",n.length);
     for (let i = 0; i < n.length; i++) {
       doc['title'] = n[i].title ? n[i].title : ""
       doc['type'] = n[i].type ? n[i].type : ""
       doc['introduction'] = n[i].introduction ? n[i].introduction : ""
-
+      console.log(doc);
       let row = await Benefit.updateOrInsertRow(doc, doc)
     }
     ctx.body = {code: '200', success: true, msg: 'ok', data: {}}
