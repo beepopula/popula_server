@@ -152,15 +152,6 @@ module.exports = function (app) {
       console.log(data);
       data = JSON.parse(data)
       console.log(data);
-      ops['twitter'] = {}
-      if (!data.html.includes(sign)) {
-        return ctx.body = {code: '201', success: false, msg: 'verify fail', data: {}}
-      } else {
-        ops['twitter']['url'] =data.author_url
-        ops['twitter']['verified'] = true
-      }
-
-      let row = await User.updateRow({account_id: account_id}, ops)
       return ctx.body = {code: '200', success: true, msg: 'ok', data: {}}
 
     } catch (e) {
