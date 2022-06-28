@@ -147,6 +147,7 @@ module.exports = function (app) {
         timeout: 10000
       };
       let data = await rp(options).catch(e => {
+        console.log(e)
         return ctx.body = {code: '201', success: false, msg: 'verify fail', data: {}}
       });
       console.log(data);
@@ -155,6 +156,7 @@ module.exports = function (app) {
       return ctx.body = {code: '200', success: true, msg: 'ok', data: {}}
 
     } catch (e) {
+      console.log(e)
       return ctx.body = {code: '201', success: false, msg: 'verify fail', data: {}}
     }
 
