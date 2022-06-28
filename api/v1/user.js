@@ -138,7 +138,6 @@ module.exports = function (app) {
     let params = ctx.params
     let account_id = params.accountId
     let twitter = params.twitter
-
     try {
       const url = `https://www.theblockbeats.info/flash/89448`;
       let options = {
