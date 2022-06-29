@@ -137,12 +137,12 @@ module.exports = function (app) {
 
   })
 
-  app.get('/api/v1/user/verifyHtml', async (ctx, next) => {
+  app.get('/api/v1/user/getContentByHtml', async (ctx, next) => {
     let params = ctx.params
     let url = params.url
     let twitter = params.twitter
     try {
-      const url = url;
+
       let options = {
         method: 'GET',
         url: url,
