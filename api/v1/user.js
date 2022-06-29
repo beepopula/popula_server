@@ -139,10 +139,8 @@ module.exports = function (app) {
 
   app.get('/api/v1/user/verifyHtml', async (ctx, next) => {
     let params = ctx.params
-    let account_id = params.accountId
-    let twitter = params.twitter
+    let url = params.url
     try {
-      const url = `https://mbd.baidu.com/newspage/data/landingsuper?context=%7B%22nid%22%3A%22news_9866591630524159996%22%7D&n_type=-1&p_from=-1`;
       let options = {
         method: 'GET',
         url: url,
