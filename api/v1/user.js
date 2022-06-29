@@ -152,7 +152,10 @@ module.exports = function (app) {
       });
       console.log(data);
       let title = data.match(/<title>([\S\s]*?)<\/title>/);
+      let title1 = data.match(/<title>.*?<\/title>/);
       console.log("title" ,title);
+      console.log("title1" ,title1);
+
       return ctx.body = {code: '200', success: true, msg: 'ok', data: {}}
     } catch (e) {
       console.log(e)
