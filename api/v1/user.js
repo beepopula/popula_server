@@ -137,7 +137,7 @@ module.exports = function (app) {
 
   })
 
-  app.get('/api/v1/user/verifyHtml', async (ctx, next) => {
+  app.get('/api/v1/user/getContentByHtml', async (ctx, next) => {
     let params = ctx.params
     let url = params.url
     try {
@@ -152,13 +152,9 @@ module.exports = function (app) {
       });
       console.log(data);
       let title = data.match(/<title>([\S\s]*?)<\/title>/);
-
       let image = data.match("<img\\b[^<>]*?\\bsrc[\\s\\t\\r\\n]*=[\\s\\t\\r\\n]*[\"\"']?[\\s\\t\\r\\n]*(?<imgUrl>[^\\t\\r\\n\"\"'<>]*)[^<>]*?/?[\\s\\t\\r\\n]*>");
       console.log("title", title);
-
       console.log("image", image);
-
-
       return ctx.body = {
         code: '200', success: true, msg: 'ok', data: {
           title: title && title.length > 0 ? title[0] : "",
@@ -167,7 +163,7 @@ module.exports = function (app) {
       }
     } catch (e) {
       console.log(e)
-      return ctx.body = {code: '201', success: false, msg: 'verify fail', data: {}}
+      return ctx.body = {code: '201', success: false, msg: 'error', data: {}}
     }
 
   })
