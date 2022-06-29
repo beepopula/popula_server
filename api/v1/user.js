@@ -22,7 +22,7 @@ module.exports = function (app) {
     }
     let ops = {account_id: account_id}
     let u = await User.getRow({account_id: account_id})
-    if (!u){
+    if (!u) {
       return ctx.body = {code: '200', success: false, msg: 'fail', data: {}}
     }
     if (avatar) {
@@ -43,14 +43,14 @@ module.exports = function (app) {
     ops['bio'] = bio
     ops['twitter'] = {}
     if (twitter) {
-      if (u['twitter'] && (twitter == u['twitter']['url'])){
+      if (u['twitter'] && (twitter == u['twitter']['url'])) {
         ops['twitter']['url'] = u['twitter']['url']
         ops['twitter']['verified'] = u['twitter']['verified']
-      }else {
+      } else {
         ops['twitter']['url'] = twitter
         ops['twitter']['verified'] = false
       }
-    }else {
+    } else {
       ops['twitter']['url'] = ""
       ops['twitter']['verified'] = false
     }
@@ -58,7 +58,7 @@ module.exports = function (app) {
     if (instagram) {
       ops['instagram']['url'] = instagram
       ops['instagram']['verified'] = false
-    }else {
+    } else {
       ops['instagram']['url'] = ""
       ops['instagram']['verified'] = false
     }
@@ -66,7 +66,7 @@ module.exports = function (app) {
     if (youtube) {
       ops['youtube']['url'] = youtube
       ops['youtube']['verified'] = false
-    }else {
+    } else {
 
       ops['youtube']['url'] = ""
       ops['youtube']['verified'] = false
@@ -75,7 +75,7 @@ module.exports = function (app) {
     if (tiktok) {
       ops['tiktok']['url'] = tiktok
       ops['tiktok']['verified'] = false
-    }else{
+    } else {
       ops['tiktok']['url'] = ""
       ops['tiktok']['verified'] = false
     }
@@ -115,16 +115,18 @@ module.exports = function (app) {
         if (!data.html.includes(sign)) {
           return ctx.body = {code: '201', success: false, msg: 'verify fail', data: {}}
         } else {
-          ops['twitter']['url'] =data.author_url
+          ops['twitter']['url'] = data.author_url
           ops['twitter']['verified'] = true
         }
 
         let row = await User.updateRow({account_id: account_id}, ops)
-        return ctx.body = {code: '200', success: true, msg: 'ok', data: {
-            author_url:data.author_url,
-            author_name:data.author_name,
-            url :data.url,
-          }}
+        return ctx.body = {
+          code: '200', success: true, msg: 'ok', data: {
+            author_url: data.author_url,
+            author_name: data.author_name,
+            url: data.url,
+          }
+        }
 
       } catch (e) {
         return ctx.body = {code: '201', success: false, msg: 'verify fail', data: {}}
@@ -152,11 +154,17 @@ module.exports = function (app) {
       });
       console.log(data);
       let title = data.match(/<title>([\S\s]*?)<\/title>/);
+      let image = data.match(/<img>([\S\s]*?)<\/img>/);
       let title1 = data.match(/<title>.*?<\/title>/);
-      console.log("title" ,title);
-      console.log("title1" ,title1);
+      console.log("title", title);
+      console.log("title1", title1);
 
-      return ctx.body = {code: '200', success: true, msg: 'ok', data: {}}
+      return ctx.body = {
+        code: '200', success: true, msg: 'ok', data: {
+          title: title && title.length > 0 ? title[0] : "",
+          image: image && image.length > 0 ? title[0] : ""
+        }
+      }
     } catch (e) {
       console.log(e)
       return ctx.body = {code: '201', success: false, msg: 'verify fail', data: {}}
