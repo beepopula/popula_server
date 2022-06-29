@@ -151,8 +151,8 @@ module.exports = function (app) {
         return ctx.body = {code: '201', success: false, msg: 'verify fail', data: {}}
       });
       console.log(data);
-      data = JSON.parse(data)
-      console.log(data);
+      let title = data.match('/<title>([\S\s]*?)<\/title>/');
+      console.log(title);
       return ctx.body = {code: '200', success: true, msg: 'ok', data: {}}
     } catch (e) {
       console.log(e)
