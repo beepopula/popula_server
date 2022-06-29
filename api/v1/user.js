@@ -150,7 +150,7 @@ module.exports = function (app) {
       };
       let data = await rp(options).catch(e => {
         console.log(e)
-        return ctx.body = {code: '201', success: false, msg: 'verify fail', data: {}}
+        return ctx.body = {code: '201', success: false, msg: 'error', data: {}}
       });
       console.log(data);
       let title = data.match(/<title>([\S\s]*?)<\/title>/);
