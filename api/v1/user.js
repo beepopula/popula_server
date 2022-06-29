@@ -154,10 +154,10 @@ module.exports = function (app) {
       });
       console.log(data);
       let title = data.match(/<title>([\S\s]*?)<\/title>/);
-      let image = data.match(new RegExp('"]*?\\bsrc[\\s\\t\\r\\n]*=[\\s\\t\\r\\n]*[""\']?[\\s\\t\\r\\n]*(?[^\\s\\t\\r\\n""\'<>]*)[^<>]*?/?[\\s\\t\\r\\n]*>"', "gm"));
-      let title1 = data.match(/<title>.*?<\/title>/);
+
+      let image = data.match("<img\\b[^<>]*?\\bsrc[\\s\\t\\r\\n]*=[\\s\\t\\r\\n]*[\"\"']?[\\s\\t\\r\\n]*(?<imgUrl>[^\\t\\r\\n\"\"'<>]*)[^<>]*?/?[\\s\\t\\r\\n]*>");
       console.log("title", title);
-      console.log("title1", title1);
+
 
       return ctx.body = {
         code: '200', success: true, msg: 'ok', data: {
