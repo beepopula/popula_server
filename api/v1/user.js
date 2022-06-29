@@ -158,11 +158,13 @@ module.exports = function (app) {
       let image = data.match("<img\\b[^<>]*?\\bsrc[\\s\\t\\r\\n]*=[\\s\\t\\r\\n]*[\"\"']?[\\s\\t\\r\\n]*(?<imgUrl>[^\\t\\r\\n\"\"'<>]*)[^<>]*?/?[\\s\\t\\r\\n]*>");
       console.log("title", title);
 
+      console.log("image", image);
+
 
       return ctx.body = {
         code: '200', success: true, msg: 'ok', data: {
           title: title && title.length > 0 ? title[0] : "",
-          image: image && image.length > 0 ? title[0] : ""
+          image: image && image.length > 0 ? image[0] : ""
         }
       }
     } catch (e) {
