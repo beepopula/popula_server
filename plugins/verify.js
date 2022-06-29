@@ -88,6 +88,7 @@ const verify = async (ctx, next) => {
         ctx.params = {
           ...data,
           //accountId: account_id,
+          account_id:params.data.me,
           ...data.args,
           signature: signature
         }

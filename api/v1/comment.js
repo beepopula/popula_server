@@ -125,24 +125,26 @@ module.exports = function (app) {
   })
 
 
-  app.post('/api/v1/comment/delete', async (ctx, next) => {
-    let params = ctx.params
-    let commentId = params.commentId
-    let accountId = params.accountId
-    let Comment = ctx.model("comment")
-    let comment = await Comment.getRow({target_hash: commentId})
-    if (comment && accountId) {
-      if (comment.accountId == accountId) {
-        let u = await Comment.updateRow({target_hash: commentId}, {deleted: true})
-        let r = await Comment.getRow({target_hash: commentId})
-        if (r.deleted == true) {
-          return ctx.body = {code: '200', success: true, msg: 'delete success', data: {}}
+/*
+    app.post('/api/v1/comment/delete', async (ctx, next) => {
+      let params = ctx.params
+      let commentId = params.commentId
+      let accountId = params.accountId
+      let Comment = ctx.model("comment")
+      let comment = await Comment.getRow({target_hash: commentId})
+      if (comment && accountId) {
+        if (comment.accountId == accountId) {
+          let u = await Comment.updateRow({target_hash: commentId}, {deleted: true})
+          let r = await Comment.getRow({target_hash: commentId})
+          if (r.deleted == true) {
+            return ctx.body = {code: '200', success: true, msg: 'delete success', data: {}}
+          }
         }
       }
-    }
 
-    ctx.body = {code: '200', success: false, msg: 'delete fail', data: {}}
-  })
+      ctx.body = {code: '200', success: false, msg: 'delete fail', data: {}}
+    })
+  */
 
   async function getComments(ops, Comment, Like, accountId, Follow, User, Post) {
     let comments = await Comment.getRows(ops)

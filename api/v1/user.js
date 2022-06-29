@@ -5,7 +5,7 @@ module.exports = function (app) {
   let rp = require("request-promise")
   app.post('/api/v1/user/updateInfo', async (ctx, next) => {
     let params = ctx.params
-    let account_id = params.accountId
+    let account_id = params.account_id
     let avatar = params.avatar
     let name = params.name
     let background = params.background
@@ -86,7 +86,7 @@ module.exports = function (app) {
 
   app.post('/api/v1/user/verifyTwitter', async (ctx, next) => {
     let params = ctx.params
-    let account_id = params.accountId
+    let account_id = params.account_id
     let twitter = params.twitter
     let sign = params.sign
     let User = ctx.model("user")
@@ -159,8 +159,6 @@ module.exports = function (app) {
     }
 
   })
-
-
 
   app.post('/api/v1/user/login', async (ctx, next) => {
     let params = ctx.params
@@ -577,28 +575,6 @@ module.exports = function (app) {
 
   })
 
-  /* app.post('/api/v1/user/share', async (ctx, next) => {
-     let params = ctx.params
-     let accountId = params.accountId
-     let target_hash = params.target_hash
-     let Share = ctx.model("share")
-     let User = ctx.model("user")
-     let ops = {account_id: accountId}
-     let row = await User.getRow(ops)
-     if (!row || !target_hash) {
-       return ctx.body = {code: '201', success: false, msg: 'accountId  or target_hash not have', data: {}}
-     }
-     let doc = {accountId: accountId, target_hash: target_hash}
-
-     let u = await Share.createRow(doc)
-     let r = await Share.getRow(doc)
-     if (r) {
-       ctx.body = {code: '200', success: true, msg: 'ok', data: {}}
-     } else {
-       ctx.body = {code: '200', success: false, msg: 'fail', data: {}}
-     }
-
-   })*/
   app.get('/api/v1/user/getNotifications', async (ctx, next) => {
     let params = ctx.params
     let accountId = params.accountId
