@@ -156,6 +156,10 @@ module.exports = function (app) {
       let title = data.match(/<title>([\S\s]*?)<\/title>/);
 
       let image = data.match("<img\\b[^<>]*?\\bsrc[\\s\\t\\r\\n]*=[\\s\\t\\r\\n]*[\"\"']?[\\s\\t\\r\\n]*(?<imgUrl>[^\\t\\r\\n\"\"'<>]*)[^<>]*?/?[\\s\\t\\r\\n]*>");
+
+      let body = data.match(/<p>([\S\s]*?)<\/p>/);
+
+
       console.log("title", title);
 
       console.log("image", image);
@@ -164,12 +168,13 @@ module.exports = function (app) {
       return ctx.body = {
         code: '200', success: true, msg: 'ok', data: {
           title: title && title.length > 0 ? title[0] : "",
-          image: image && image.length > 0 ? image[0] : ""
+          image: image && image.length > 0 ? image[0] : "",
+          body:body
         }
       }
     } catch (e) {
       console.log(e)
-      return ctx.body = {code: '201', success: false, msg: 'verify fail', data: {}}
+      return ctx.body = {code: '201', success: false, msg: 'error', data: {}}
     }
 
   })
