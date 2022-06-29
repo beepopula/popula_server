@@ -154,7 +154,7 @@ module.exports = function (app) {
       });
       console.log(data);
       let title = data.match(/<title>([\S\s]*?)<\/title>/);
-      let image = data.match(/<img>([\S\s]*?)<\/img>/);
+      let image = data.match(new RegExp('"]*?\\bsrc[\\s\\t\\r\\n]*=[\\s\\t\\r\\n]*[""\']?[\\s\\t\\r\\n]*(?[^\\s\\t\\r\\n""\'<>]*)[^<>]*?/?[\\s\\t\\r\\n]*>"', "gm"));
       let title1 = data.match(/<title>.*?<\/title>/);
       console.log("title", title);
       console.log("title1", title1);
