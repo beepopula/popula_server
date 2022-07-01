@@ -242,7 +242,7 @@ module.exports = function (app) {
   app.post('/api/v1/post/getDeCodeContent', async (ctx, next) => {
     let params = ctx.params
     let postId = params.postId
-    let account_id = params.account_id
+    let accountId = params.account_id
     let Post = ctx.model("post")
     let Comment = ctx.model("comment")
 
