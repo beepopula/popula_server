@@ -127,17 +127,13 @@ module.exports = function (app) {
     let params = ctx.params
     let communityId = params.communityId
     let accountId = params.accountId
+    let account_id = params.account_id
     let name = params.name
     let cover = params.cover
     let avatar = params.avatar
     let info = params.info
-    let information = params.information
-    let website = params.website
-    let governance = params.governance
-    let twitter = params.twitter
-    let discord = params.discord
     let Community = ctx.model("communities")
-    let community = await Community.getRow({communityId: communityId, accountId: accountId})
+    let community = await Community.getRow({communityId: communityId, accountId: account_id})
     if (!community) {
       return ctx.body = {code: '200', success: false, msg: 'community not have', data: {},}
     }
@@ -174,7 +170,7 @@ module.exports = function (app) {
 
   })
 
-  app.post('/api/v1/communities/addBenefit', async (ctx, next) => {
+/*  app.post('/api/v1/communities/addBenefit', async (ctx, next) => {
     let params = ctx.params
     let communityId = params.communityId
     let accountId = params.accountId
@@ -208,7 +204,7 @@ module.exports = function (app) {
     }
 
 
-  })
+  })*/
 
   app.get('/api/v1/communities/getBenefitList', async (ctx, next) => {
     let params = ctx.params
@@ -237,13 +233,12 @@ module.exports = function (app) {
     let params = ctx.params
     let communityId = params.communityId
     let accountId = params.accountId
+    let account_id = params.account_id
     let benefits = params.benefits
-    let title = params.title
-    let introduction = params.introduction
     let type = params.type
     let Community = ctx.model("communities")
     let Benefit = ctx.model("benefit")
-    let community = await Community.getRow({communityId: communityId, accountId: accountId})
+    let community = await Community.getRow({communityId: communityId, accountId: account_id})
     if (!community) {
       return ctx.body = {code: '200', success: false, msg: 'community not have', data: {},}
     }
@@ -264,26 +259,26 @@ module.exports = function (app) {
 
   })
 
-  app.post('/api/v1/communities/deleteBenefit', async (ctx, next) => {
-    let params = ctx.params
-    let communityId = params.communityId
-    let accountId = params.accountId
-    let benefitId = params.benefitId
-    let Community = ctx.model("communities")
-    let Benefit = ctx.model("benefit")
-    let community = await Community.getRow({communityId: communityId, accountId: accountId})
-    if (!community) {
-      return ctx.body = {code: '200', success: false, msg: 'community not have', data: {},}
-    }
-    let row = await Benefit.deleteRow({_id: mongoose.Types.ObjectId(benefitId), communityId: communityId,})
-    if (row) {
-      ctx.body = {code: '200', success: true, msg: 'ok', data: row}
-    } else {
-      ctx.body = {code: '201', success: false, msg: 'fail', data: {}}
-    }
-
-
-  })
+  // app.post('/api/v1/communities/deleteBenefit', async (ctx, next) => {
+  //   let params = ctx.params
+  //   let communityId = params.communityId
+  //   let accountId = params.accountId
+  //   let benefitId = params.benefitId
+  //   let Community = ctx.model("communities")
+  //   let Benefit = ctx.model("benefit")
+  //   let community = await Community.getRow({communityId: communityId, accountId: accountId})
+  //   if (!community) {
+  //     return ctx.body = {code: '200', success: false, msg: 'community not have', data: {},}
+  //   }
+  //   let row = await Benefit.deleteRow({_id: mongoose.Types.ObjectId(benefitId), communityId: communityId,})
+  //   if (row) {
+  //     ctx.body = {code: '200', success: true, msg: 'ok', data: row}
+  //   } else {
+  //     ctx.body = {code: '201', success: false, msg: 'fail', data: {}}
+  //   }
+  //
+  //
+  // })
 
   app.post('/api/v1/communities/addNews', async (ctx, next) => {
     let params = ctx.params
@@ -359,10 +354,11 @@ module.exports = function (app) {
     let params = ctx.params
     let communityId = params.communityId
     let accountId = params.accountId
+    let account_id = params.account_id
     let news = params.news
     let Community = ctx.model("communities")
     let News = ctx.model("news")
-    let community = await Community.getRow({communityId: communityId, accountId: accountId})
+    let community = await Community.getRow({communityId: communityId, accountId: account_id})
     if (!community) {
       return ctx.body = {code: '200', success: false, msg: 'community not have', data: {},}
     }
@@ -388,7 +384,7 @@ module.exports = function (app) {
 
   })
 
-  app.post('/api/v1/communities/deleteNews', async (ctx, next) => {
+/*  app.post('/api/v1/communities/deleteNews', async (ctx, next) => {
     let params = ctx.params
     let communityId = params.communityId
     let accountId = params.accountId
@@ -407,19 +403,19 @@ module.exports = function (app) {
     }
 
 
-  })
+  })*/
 
 
   app.post('/api/v1/communities/contributor/update', async (ctx, next) => {
     let params = ctx.params
     let communityId = params.communityId
     let accountId = params.accountId
-    let currentAccountId = params.currentAccountId
+    let account_id = params.account_id
     let information = params.information
     let contributors = params.contributor
     let Community = ctx.model("communities")
     let Contributor = ctx.model("contributor")
-    let community = await Community.getRow({communityId: communityId, accountId: accountId})
+    let community = await Community.getRow({communityId: communityId, accountId: account_id})
     if (!community) {
       return ctx.body = {code: '200', success: false, msg: 'community not have', data: {},}
     }
@@ -442,7 +438,7 @@ module.exports = function (app) {
 
   })
 
-  app.post('/api/v1/communities/contributor/add', async (ctx, next) => {
+/*  app.post('/api/v1/communities/contributor/add', async (ctx, next) => {
     let params = ctx.params
     let communityId = params.communityId
     let accountId = params.accountId
@@ -466,9 +462,9 @@ module.exports = function (app) {
     let updateContributor = await Contributor.getRow({communityId: communityId, accountId: accountId})
     ctx.body = {code: '200', success: true, msg: 'ok', data: updateContributor}
 
-  })
+  })*/
 
-  app.post('/api/v1/communities/contributor/delete', async (ctx, next) => {
+/*  app.post('/api/v1/communities/contributor/delete', async (ctx, next) => {
     let params = ctx.params
     let communityId = params.communityId
     let accountId = params.accountId
@@ -483,7 +479,7 @@ module.exports = function (app) {
 
     ctx.body = {code: '200', success: true, msg: 'ok', data: {}}
 
-  })
+  })*/
 
 
   app.post('/api/v1/communities/replacementSequence', async (ctx, next) => {
@@ -526,6 +522,7 @@ module.exports = function (app) {
     ctx.body = {code: '200', success: true, msg: 'ok', data: {}}
 
   })
+
   app.get('/api/v1/communities/At', async (ctx, next) => {
     let params = ctx.params
     let accountId = params.accountId

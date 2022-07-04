@@ -242,7 +242,7 @@ module.exports = function (app) {
   app.post('/api/v1/post/getDeCodeContent', async (ctx, next) => {
     let params = ctx.params
     let postId = params.postId
-    let accountId = params.accountId
+    let accountId = params.account_id
     let Post = ctx.model("post")
     let Comment = ctx.model("comment")
 
@@ -311,6 +311,7 @@ module.exports = function (app) {
   })
 
 
+/*
   app.post('/api/v1/post/delete', async (ctx, next) => {
     let params = ctx.params
     let postId = params.postId
@@ -329,6 +330,7 @@ module.exports = function (app) {
 
     ctx.body = {code: '200', success: false, msg: 'delete fail', data: {}}
   })
+*/
 
 
   // app.post('/api/v1/post/sign_post', async (ctx, next) => {

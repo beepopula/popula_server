@@ -5,7 +5,7 @@ module.exports = function (app) {
   let rp = require("request-promise")
   app.post('/api/v1/user/updateInfo', async (ctx, next) => {
     let params = ctx.params
-    let account_id = params.accountId
+    let account_id = params.account_id
     let avatar = params.avatar
     let name = params.name
     let background = params.background
@@ -22,7 +22,7 @@ module.exports = function (app) {
     }
     let ops = {account_id: account_id}
     let u = await User.getRow({account_id: account_id})
-    if (!u){
+    if (!u) {
       return ctx.body = {code: '200', success: false, msg: 'fail', data: {}}
     }
     if (avatar) {
@@ -43,14 +43,14 @@ module.exports = function (app) {
     ops['bio'] = bio
     ops['twitter'] = {}
     if (twitter) {
-      if (u['twitter'] && (twitter == u['twitter']['url'])){
+      if (u['twitter'] && (twitter == u['twitter']['url'])) {
         ops['twitter']['url'] = u['twitter']['url']
         ops['twitter']['verified'] = u['twitter']['verified']
-      }else {
+      } else {
         ops['twitter']['url'] = twitter
         ops['twitter']['verified'] = false
       }
-    }else {
+    } else {
       ops['twitter']['url'] = ""
       ops['twitter']['verified'] = false
     }
@@ -58,7 +58,7 @@ module.exports = function (app) {
     if (instagram) {
       ops['instagram']['url'] = instagram
       ops['instagram']['verified'] = false
-    }else {
+    } else {
       ops['instagram']['url'] = ""
       ops['instagram']['verified'] = false
     }
@@ -66,7 +66,7 @@ module.exports = function (app) {
     if (youtube) {
       ops['youtube']['url'] = youtube
       ops['youtube']['verified'] = false
-    }else {
+    } else {
 
       ops['youtube']['url'] = ""
       ops['youtube']['verified'] = false
@@ -75,7 +75,7 @@ module.exports = function (app) {
     if (tiktok) {
       ops['tiktok']['url'] = tiktok
       ops['tiktok']['verified'] = false
-    }else{
+    } else {
       ops['tiktok']['url'] = ""
       ops['tiktok']['verified'] = false
     }
@@ -86,7 +86,7 @@ module.exports = function (app) {
 
   app.post('/api/v1/user/verifyTwitter', async (ctx, next) => {
     let params = ctx.params
-    let account_id = params.accountId
+    let account_id = params.account_id
     let twitter = params.twitter
     let sign = params.sign
     let User = ctx.model("user")
@@ -115,16 +115,18 @@ module.exports = function (app) {
         if (!data.html.includes(sign)) {
           return ctx.body = {code: '201', success: false, msg: 'verify fail', data: {}}
         } else {
-          ops['twitter']['url'] =data.author_url
+          ops['twitter']['url'] = data.author_url
           ops['twitter']['verified'] = true
         }
 
         let row = await User.updateRow({account_id: account_id}, ops)
-        return ctx.body = {code: '200', success: true, msg: 'ok', data: {
-            author_url:data.author_url,
-            author_name:data.author_name,
-            url :data.url,
-          }}
+        return ctx.body = {
+          code: '200', success: true, msg: 'ok', data: {
+            author_url: data.author_url,
+            author_name: data.author_name,
+            url: data.url,
+          }
+        }
 
       } catch (e) {
         return ctx.body = {code: '201', success: false, msg: 'verify fail', data: {}}
@@ -134,12 +136,13 @@ module.exports = function (app) {
     }
 
   })
-  app.get('/api/v1/user/verifyHtml', async (ctx, next) => {
+
+  app.get('/api/v1/user/getContentByHtml', async (ctx, next) => {
     let params = ctx.params
-    let account_id = params.accountId
+    let url = params.url
     let twitter = params.twitter
     try {
-      const url = `https://www.theblockbeats.info/flash/89448`;
+
       let options = {
         method: 'GET',
         url: url,
@@ -147,20 +150,34 @@ module.exports = function (app) {
       };
       let data = await rp(options).catch(e => {
         console.log(e)
-        return ctx.body = {code: '201', success: false, msg: 'verify fail', data: {}}
+        return ctx.body = {code: '201', success: false, msg: 'error', data: {}}
       });
       console.log(data);
-      data = JSON.parse(data)
-      console.log(data);
-      return ctx.body = {code: '200', success: true, msg: 'ok', data: {}}
+      let title = data.match(/<title>([\S\s]*?)<\/title>/);
+
+      let image = data.match("<img\\b[^<>]*?\\bsrc[\\s\\t\\r\\n]*=[\\s\\t\\r\\n]*[\"\"']?[\\s\\t\\r\\n]*(?<imgUrl>[^\\t\\r\\n\"\"'<>]*)[^<>]*?/?[\\s\\t\\r\\n]*>");
+
+      let body = data.match(/<p>([\S\s]*?)<\/p>/);
+
+
+      console.log("title", title);
+
+      console.log("image", image);
+
+
+      return ctx.body = {
+        code: '200', success: true, msg: 'ok', data: {
+          title: title && title.length > 0 ? title[0] : "",
+          image: image && image.length > 0 ? image[0] : "",
+          body:body
+        }
+      }
     } catch (e) {
       console.log(e)
-      return ctx.body = {code: '201', success: false, msg: 'verify fail', data: {}}
+      return ctx.body = {code: '201', success: false, msg: 'error', data: {}}
     }
 
   })
-
-
 
   app.post('/api/v1/user/login', async (ctx, next) => {
     let params = ctx.params
@@ -577,28 +594,6 @@ module.exports = function (app) {
 
   })
 
-  /* app.post('/api/v1/user/share', async (ctx, next) => {
-     let params = ctx.params
-     let accountId = params.accountId
-     let target_hash = params.target_hash
-     let Share = ctx.model("share")
-     let User = ctx.model("user")
-     let ops = {account_id: accountId}
-     let row = await User.getRow(ops)
-     if (!row || !target_hash) {
-       return ctx.body = {code: '201', success: false, msg: 'accountId  or target_hash not have', data: {}}
-     }
-     let doc = {accountId: accountId, target_hash: target_hash}
-
-     let u = await Share.createRow(doc)
-     let r = await Share.getRow(doc)
-     if (r) {
-       ctx.body = {code: '200', success: true, msg: 'ok', data: {}}
-     } else {
-       ctx.body = {code: '200', success: false, msg: 'fail', data: {}}
-     }
-
-   })*/
   app.get('/api/v1/user/getNotifications', async (ctx, next) => {
     let params = ctx.params
     let accountId = params.accountId
