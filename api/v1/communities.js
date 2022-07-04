@@ -219,7 +219,7 @@ module.exports = function (app) {
     let type = params.type
     let Community = ctx.model("communities")
     let Benefit = ctx.model("benefit")
-    let community = await Community.getRow({communityId: communityId, accountId: accountId})
+    let community = await Community.getRow({communityId: communityId})
     if (!community) {
       return ctx.body = {code: '200', success: false, msg: 'community not have', data: {},}
     }
@@ -340,7 +340,7 @@ module.exports = function (app) {
     let accountId = params.accountId
     let Community = ctx.model("communities")
     let News = ctx.model("news")
-    let community = await Community.getRow({communityId: communityId, accountId: accountId})
+    let community = await Community.getRow({communityId: communityId})
     if (!community) {
       return ctx.body = {code: '200', success: false, msg: 'community not have', data: {},}
     }
