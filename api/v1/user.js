@@ -248,10 +248,6 @@ module.exports = function (app) {
         bio: "",
         background: "",
         email: "",
-        following: [],
-        followers: [],
-        media: [],
-        actions: []
       }
     }
 
