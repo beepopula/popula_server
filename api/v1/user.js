@@ -232,6 +232,11 @@ module.exports = function (app) {
     let Community = ctx.model("communities")
     let ops = {account_id: accountId}
     let row = await User.getRow(ops)
+    if (!row){
+      row={
+        account_id: accountId
+      }
+    }
     if (row) {
       let following = await Follow.getRowsCount({accountId: accountId, followFlag: false})
       let follows = await Follow.getRowsCount({account_id: accountId, followFlag: false})
