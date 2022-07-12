@@ -248,6 +248,11 @@ module.exports = function (app) {
         let row = await Community.getRow({communityId: communities[i]['communityId'], deleted: false})
         d.push(row)
       }
+      if (d.length==0){
+        let row =await await Community.getRow({communityId: constants.MAIN_CONTRACT})
+        d.push(row)
+      }
+
       let isFollow = await Follow.getRowsCount({
         accountId: currentAccountId,
         account_id: row.account_id,
