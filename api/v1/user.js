@@ -258,10 +258,17 @@ module.exports = function (app) {
       ctx.body = {code: '200', success: true, msg: 'ok', data: row}
     } else {
       ctx.body = {
-        code: '200', success: true, msg: 'fail', data: {
+        code: '200', success: true, msg: 'reset', data: {
           account_id: accountId,
           public_key: "",
           create_time: new Date(),
+          data:{
+            isFollow:false,
+            following:0,
+            follows:0,
+            postCount:0,
+            joinedCommunities:[]
+          },
           avatar: "",
           bio: "",
           background: "",
