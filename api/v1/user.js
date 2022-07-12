@@ -234,10 +234,27 @@ module.exports = function (app) {
     let row = await User.getRow(ops)
     if (!row){
       row={
-        account_id: accountId
+        account_id: accountId,
+        public_key: "",
+        create_time: new Date(),
+        data:{
+          isFollow:false,
+          following:0,
+          follows:0,
+          postCount:0,
+          joinedCommunities:[]
+        },
+        avatar: "",
+        bio: "",
+        background: "",
+        email: "",
+        following: [],
+        followers: [],
+        media: [],
+        actions: []
       }
     }
-    if (row) {
+
       let following = await Follow.getRowsCount({accountId: accountId, followFlag: false})
       let follows = await Follow.getRowsCount({account_id: accountId, followFlag: false})
       let postCount = await Post.getRowsCount({accountId: accountId, deleted: false})
@@ -248,7 +265,7 @@ module.exports = function (app) {
         let row = await Community.getRow({communityId: communities[i]['communityId'], deleted: false})
         d.push(row)
       }
-      if (d.length==0){
+      if (d.length===0){
         let row =await await Community.getRow({communityId: constants.MAIN_CONTRACT})
         d.push(row)
       }
@@ -266,30 +283,7 @@ module.exports = function (app) {
       row['data']['joinedCommunities'] = d
       //row['data']['joinedCount'] = count
       ctx.body = {code: '200', success: true, msg: 'ok', data: row}
-    } else {
-      ctx.body = {
-        code: '200', success: true, msg: 'reset', data: {
-          account_id: accountId,
-          public_key: "",
-          create_time: new Date(),
-          data:{
-            isFollow:false,
-            following:0,
-            follows:0,
-            postCount:0,
-            joinedCommunities:[]
-          },
-          avatar: "",
-          bio: "",
-          background: "",
-          email: "",
-          following: [],
-          followers: [],
-          media: [],
-          actions: []
-        }
-      }
-    }
+
   })
 
 
