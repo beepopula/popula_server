@@ -608,7 +608,7 @@ module.exports = function (app) {
     let lastTime = params.lastTime ? params.lastTime : moment().subtract(30, "days").valueOf()
     let Notification = ctx.model("notification")
     let User = ctx.model("user")
-    let q = {"$or": [{accountId: accountId, "$or": [{type: "post"}]},{"commentContent.accountId": accountId, "$or": [{type: "comment"}, {type: "post"}, {type: "mainPost"}]}, {'options.At': accountId}]}
+    let q = {"$or": [{accountId: accountId, "$or": [{type: "post"},{type: "comment"}]},{"commentContent.accountId": accountId, "$or": [{type: "comment"}, {type: "post"}, {type: "mainPost"}]}, {'options.At': accountId}]}
     if (lastTime) {
       q['createAt'] = {$gte: lastTime}
     }
@@ -643,7 +643,7 @@ module.exports = function (app) {
         }
       }
 
-      if (comments[i]['type'] == 'post') {
+      if ((comments[i]['type'] === 'post'||comments[i]['type'] ==='comment'||comments[i]['type'] === 'mainPost')&&(comments[i].commentContent.accountId!==accountId)) {
         if (likes.length != 0 || comments[i]['data']['At'] != null) {
           n.push(comments[i])
         }
