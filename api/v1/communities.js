@@ -167,8 +167,6 @@ module.exports = function (app) {
     let twitter = params.twitter
     let sign = params.sign
     let Community = ctx.model("communities")
-    console.log("params" ,params);
-    console.log("twitter" ,twitter);
     if (!twitter) {
       return ctx.body = {code: '200', success: false, msg: 'twitter must params', data: {}}
     }
@@ -189,6 +187,7 @@ module.exports = function (app) {
           return ctx.body = {code: '201', success: false, msg: 'verify fail', data: {}}
         });
         data = JSON.parse(data)
+        console.log(data);
         ops['twitter'] = {}
         if (!data.html.includes(sign)) {
           return ctx.body = {code: '201', success: false, msg: 'verify fail', data: {}}
@@ -460,7 +459,6 @@ module.exports = function (app) {
     let twitter = params.twitter
     let website = params.website
     let discord = params.discord
-    console.log('params',params);
     let Community = ctx.model("communities")
     let Contributor = ctx.model("contributor")
     let community = await Community.getRow({communityId: communityId, accountId: account_id})
