@@ -492,8 +492,6 @@ module.exports = function (app) {
       doc['twitter']['url'] = ""
       doc['twitter']['verified'] = false
     }
-
-
     doc['website'] = {}
     if (website) {
       doc['website']['url'] = website
