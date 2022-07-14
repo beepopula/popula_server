@@ -132,9 +132,7 @@ module.exports = function (app) {
     let cover = params.cover
     let avatar = params.avatar
     let info = params.info
-    let twitter = params.twitter
-    let website = params.website
-    let discord = params.discord
+
     let Community = ctx.model("communities")
     let community = await Community.getRow({communityId: communityId, accountId: account_id})
     if (!community) {
@@ -152,39 +150,6 @@ module.exports = function (app) {
     }
     if (info) {
       doc['info'] = info
-    }
-
-    doc['twitter'] = {}
-    if (twitter) {
-      if (community['twitter'] && (twitter == community['twitter']['url'])) {
-        doc['twitter']['url'] = community['twitter']['url']
-        doc['twitter']['verified'] = community['twitter']['verified']
-      } else {
-        doc['twitter']['url'] = twitter
-        doc['twitter']['verified'] = false
-      }
-    } else {
-      doc['twitter']['url'] = ""
-      doc['twitter']['verified'] = false
-    }
-
-
-    doc['website'] = {}
-    if (website) {
-      doc['website']['url'] = website
-      doc['website']['verified'] = false
-    } else {
-      doc['website']['url'] = ""
-      doc['website']['verified'] = false
-    }
-
-    doc['discord'] = {}
-    if (discord) {
-      doc['discord']['url'] = discord
-      doc['discord']['verified'] = false
-    } else {
-      doc['discord']['url'] = ""
-      doc['discord']['verified'] = false
     }
 
     let update = await Community.updateRow({communityId: communityId}, doc)
@@ -491,6 +456,9 @@ module.exports = function (app) {
     let account_id = params.account_id
     let information = params.information
     let contributors = params.contributor
+    let twitter = params.twitter
+    let website = params.website
+    let discord = params.discord
     let Community = ctx.model("communities")
     let Contributor = ctx.model("contributor")
     let community = await Community.getRow({communityId: communityId, accountId: account_id})
@@ -509,8 +477,43 @@ module.exports = function (app) {
         accountId: c[i]
       }, {communityId: communityId, accountId: c[i]})
     }
+ let doc ={}
+    doc['information']=information
 
-    let update = await Community.updateRow({communityId: communityId}, {information: information})
+    doc['twitter'] = {}
+    if (twitter) {
+      if (community['twitter'] && (twitter == community['twitter']['url'])) {
+        doc['twitter']['url'] = community['twitter']['url']
+        doc['twitter']['verified'] = community['twitter']['verified']
+      } else {
+        doc['twitter']['url'] = twitter
+        doc['twitter']['verified'] = false
+      }
+    } else {
+      doc['twitter']['url'] = ""
+      doc['twitter']['verified'] = false
+    }
+
+
+    doc['website'] = {}
+    if (website) {
+      doc['website']['url'] = website
+      doc['website']['verified'] = false
+    } else {
+      doc['website']['url'] = ""
+      doc['website']['verified'] = false
+    }
+
+    doc['discord'] = {}
+    if (discord) {
+      doc['discord']['url'] = discord
+      doc['discord']['verified'] = false
+    } else {
+      doc['discord']['url'] = ""
+      doc['discord']['verified'] = false
+    }
+
+    let update = await Community.updateRow({communityId: communityId}, doc)
     let updateContributor = await Contributor.getRows({communityId: communityId})
     ctx.body = {code: '200', success: true, msg: 'ok', data: updateContributor}
 
