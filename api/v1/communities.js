@@ -135,7 +135,6 @@ module.exports = function (app) {
     let twitter = params.twitter
     let website = params.website
     let discord = params.discord
-
     let Community = ctx.model("communities")
     let community = await Community.getRow({communityId: communityId, accountId: account_id})
     if (!community) {
