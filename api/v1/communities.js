@@ -3,6 +3,7 @@ module.exports = function (app) {
   const {Pool} = require('pg')
   const config = require('config')
   const constants = config.get('constants');
+  let rp = require("request-promise")
   // import {ObjectId} from 'mongodb'
   app.get('/api/v1/communities/list', async (ctx, next) => {
     let params = ctx.params
