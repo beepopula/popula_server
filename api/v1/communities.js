@@ -167,6 +167,7 @@ module.exports = function (app) {
     let twitter = params.twitter
     let sign = params.sign
     let Community = ctx.model("communities")
+    console.log("twitter" ,twitter);
     if (!twitter) {
       return ctx.body = {code: '200', success: false, msg: 'twitter must params', data: {}}
     }
