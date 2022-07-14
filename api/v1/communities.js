@@ -477,9 +477,8 @@ module.exports = function (app) {
         accountId: c[i]
       }, {communityId: communityId, accountId: c[i]})
     }
- let doc ={}
+    let doc ={}
     doc['information']=information
-
     doc['twitter'] = {}
     if (twitter) {
       if (community['twitter'] && (twitter == community['twitter']['url'])) {
