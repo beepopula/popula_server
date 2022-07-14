@@ -176,7 +176,6 @@ module.exports = function (app) {
     if (!community) {
       return ctx.body = {code: '200', success: false, msg: 'community not found', data: {}}
     }
-
     if (twitter && community['twitter']) {
       try {
         const url = `https://publish.twitter.com/oembed?url=${encodeURI(twitter)}`;
