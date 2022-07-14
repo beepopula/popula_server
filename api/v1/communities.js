@@ -460,6 +460,7 @@ module.exports = function (app) {
     let twitter = params.twitter
     let website = params.website
     let discord = params.discord
+    console.log('params',params);
     let Community = ctx.model("communities")
     let Contributor = ctx.model("contributor")
     let community = await Community.getRow({communityId: communityId, accountId: account_id})
