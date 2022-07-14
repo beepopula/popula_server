@@ -132,6 +132,10 @@ module.exports = function (app) {
     let cover = params.cover
     let avatar = params.avatar
     let info = params.info
+    let twitter = params.twitter
+    let website = params.website
+    let discord = params.discord
+
     let Community = ctx.model("communities")
     let community = await Community.getRow({communityId: communityId, accountId: account_id})
     if (!community) {
@@ -151,22 +155,98 @@ module.exports = function (app) {
       doc['info'] = info
     }
 
-    /*    if (website) {
-          doc['website'] = {}
-        }
-        if (governance) {
-          doc['governance'] =  {}
-        }
-        if (twitter) {
-          doc['twitter'] =  {}
-        }
-        if (discord) {
-          doc['discord'] =  {}
-        }*/
+    doc['twitter'] = {}
+    if (twitter) {
+      if (community['twitter'] && (twitter == community['twitter']['url'])) {
+        doc['twitter']['url'] = community['twitter']['url']
+        doc['twitter']['verified'] = community['twitter']['verified']
+      } else {
+        doc['twitter']['url'] = twitter
+        doc['twitter']['verified'] = false
+      }
+    } else {
+      doc['twitter']['url'] = ""
+      doc['twitter']['verified'] = false
+    }
+
+
+    doc['website'] = {}
+    if (website) {
+      doc['website']['url'] = website
+      doc['website']['verified'] = false
+    } else {
+      doc['website']['url'] = ""
+      doc['website']['verified'] = false
+    }
+
+    doc['discord'] = {}
+    if (discord) {
+      doc['discord']['url'] = discord
+      doc['discord']['verified'] = false
+    } else {
+      doc['discord']['url'] = ""
+      doc['discord']['verified'] = false
+    }
+
     let update = await Community.updateRow({communityId: communityId}, doc)
     let updateCommunity = await Community.getRow({communityId: communityId})
     updateCommunity['data'] = {}
     ctx.body = {code: '200', success: true, msg: 'ok', data: updateCommunity}
+
+  })
+
+
+  app.post('/api/v1/communities/verifyTwitter', async (ctx, next) => {
+    let params = ctx.params
+    let account_id = params.account_id
+    let communityId = params.communityId
+    let twitter = params.twitter
+    let sign = params.sign
+    let Community = ctx.model("communities")
+    if (!twitter) {
+      return ctx.body = {code: '200', success: false, msg: 'twitter must params', data: {}}
+    }
+    let ops = {account_id: account_id}
+    let community = await Community.getRow({communityId: communityId, accountId: account_id})
+    if (!community) {
+      return ctx.body = {code: '200', success: false, msg: 'community not found', data: {}}
+    }
+
+    if (twitter && community['twitter']) {
+      try {
+        const url = `https://publish.twitter.com/oembed?url=${encodeURI(twitter)}`;
+        let options = {
+          method: 'GET',
+          url: url,
+          timeout: 10000
+        };
+        let data = await rp(options).catch(e => {
+          return ctx.body = {code: '201', success: false, msg: 'verify fail', data: {}}
+        });
+        data = JSON.parse(data)
+        ops['twitter'] = {}
+        if (!data.html.includes(sign)) {
+          return ctx.body = {code: '201', success: false, msg: 'verify fail', data: {}}
+        } else {
+          ops['twitter']['url'] = data.author_url
+          ops['twitter']['verified'] = true
+        }
+
+        let row = await Community.updateRow({communityId: communityId, accountId: account_id}, ops)
+        return ctx.body = {
+          code: '200', success: true, msg: 'ok', data: {
+            author_url: data.author_url,
+            author_name: data.author_name,
+            url: data.url,
+          }
+        }
+
+      } catch (e) {
+        return ctx.body = {code: '201', success: false, msg: 'verify fail', data: {}}
+      }
+    } else {
+      return ctx.body = {code: '201', success: false, msg: 'verify fail', data: {}}
+    }
 
   })
 
