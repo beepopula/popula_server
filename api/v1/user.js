@@ -108,7 +108,7 @@ module.exports = function (app) {
     }
     let ops = {account_id: account_id}
     let u = await User.getRow({account_id: account_id})
-    if (twitter && u['twitter']) {
+    if (twitter ) {
       try {
         const url = `https://publish.twitter.com/oembed?url=${encodeURI(twitter)}`;
         let options = {
