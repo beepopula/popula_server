@@ -428,26 +428,6 @@ module.exports = function (app) {
 
   })
 
-/*  app.post('/api/v1/communities/deleteNews', async (ctx, next) => {
-    let params = ctx.params
-    let communityId = params.communityId
-    let accountId = params.accountId
-    let newsId = params.newsId
-    let Community = ctx.model("communities")
-    let News = ctx.model("news")
-    let community = await Community.getRow({communityId: communityId, accountId: accountId})
-    if (!community) {
-      return ctx.body = {code: '200', success: false, msg: 'community not have', data: {},}
-    }
-    let row = await News.deleteRow({_id: mongoose.Types.ObjectId(newsId), communityId: communityId,})
-    if (row) {
-      ctx.body = {code: '200', success: true, msg: 'ok', data: row}
-    } else {
-      ctx.body = {code: '201', success: false, msg: 'fail', data: {}}
-    }
-
-
-  })*/
 
 
   app.post('/api/v1/communities/contributor/update', async (ctx, next) => {
@@ -516,49 +496,6 @@ module.exports = function (app) {
     ctx.body = {code: '200', success: true, msg: 'ok', data: updateContributor}
 
   })
-
-/*  app.post('/api/v1/communities/contributor/add', async (ctx, next) => {
-    let params = ctx.params
-    let communityId = params.communityId
-    let accountId = params.accountId
-    let currentAccountId = params.currentAccountId
-    let name = params.name
-    let avatar = params.avatar
-    let Community = ctx.model("communities")
-    let Contributor = ctx.model("contributor")
-    let community = await Community.getRow({communityId: communityId, accountId: currentAccountId})
-    if (!community) {
-      return ctx.body = {code: '200', success: false, msg: 'community not have', data: {},}
-    }
-    let doc = {communityId: communityId, accountId: accountId}
-    if (name) {
-      doc['name'] = name
-    }
-    if (avatar) {
-      doc['avatar'] = avatar
-    }
-    let update = await Contributor.updateOrInsertRow({communityId: communityId, accountId: accountId}, doc)
-    let updateContributor = await Contributor.getRow({communityId: communityId, accountId: accountId})
-    ctx.body = {code: '200', success: true, msg: 'ok', data: updateContributor}
-
-  })*/
-
-/*  app.post('/api/v1/communities/contributor/delete', async (ctx, next) => {
-    let params = ctx.params
-    let communityId = params.communityId
-    let accountId = params.accountId
-    let currentAccountId = params.currentAccountId
-    let Community = ctx.model("communities")
-    let Contributor = ctx.model("contributor")
-    let community = await Community.getRow({communityId: communityId, accountId: currentAccountId})
-    if (!community) {
-      return ctx.body = {code: '200', success: false, msg: 'community not have', data: {},}
-    }
-    let update = await Contributor.deleteRow({communityId: communityId, accountId: accountId})
-
-    ctx.body = {code: '200', success: true, msg: 'ok', data: {}}
-
-  })*/
 
 
   app.post('/api/v1/communities/replacementSequence', async (ctx, next) => {
