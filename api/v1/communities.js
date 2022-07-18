@@ -535,7 +535,7 @@ module.exports = function (app) {
       }*/
 
       if (type == 'created') {
-        if (!rows[i]['token_old_owner_account_id']) {
+        if (!rows[i]['token_old_owner_account_id'] || rows[i]['token_old_owner_account_id'] == '') {
           n.push(rows[i])
         }
       } else {
