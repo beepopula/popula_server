@@ -215,41 +215,6 @@ module.exports = function (app) {
 
   })
 
-/*  app.post('/api/v1/communities/addBenefit', async (ctx, next) => {
-    let params = ctx.params
-    let communityId = params.communityId
-    let accountId = params.accountId
-    let title = params.title
-    let introduction = params.introduction
-    let type = params.type
-    let Community = ctx.model("communities")
-    let Benefit = ctx.model("benefit")
-
-    let community = await Community.getRow({communityId: communityId, accountId: accountId})
-    if (!community) {
-      return ctx.body = {code: '200', success: false, msg: 'community not have', data: {},}
-    }
-    let doc = {communityId: communityId}
-    if (title) {
-      doc['title'] = title
-    }
-    if (introduction) {
-      doc['introduction'] = introduction
-    }
-    if (type) {
-      doc['type'] = type
-    }
-
-    let update = await Benefit.createRow(doc)
-    let row = await Benefit.getRow(doc)
-    if (row) {
-      ctx.body = {code: '200', success: true, msg: 'ok', data: row}
-    } else {
-      ctx.body = {code: '201', success: false, msg: 'fail', data: {}}
-    }
-
-
-  })*/
   app.get('/api/v1/communities/getBenefitList', async (ctx, next) => {
     let params = ctx.params
     let communityId = params.communityId
@@ -303,26 +268,6 @@ module.exports = function (app) {
 
   })
 
-  // app.post('/api/v1/communities/deleteBenefit', async (ctx, next) => {
-  //   let params = ctx.params
-  //   let communityId = params.communityId
-  //   let accountId = params.accountId
-  //   let benefitId = params.benefitId
-  //   let Community = ctx.model("communities")
-  //   let Benefit = ctx.model("benefit")
-  //   let community = await Community.getRow({communityId: communityId, accountId: accountId})
-  //   if (!community) {
-  //     return ctx.body = {code: '200', success: false, msg: 'community not have', data: {},}
-  //   }
-  //   let row = await Benefit.deleteRow({_id: mongoose.Types.ObjectId(benefitId), communityId: communityId,})
-  //   if (row) {
-  //     ctx.body = {code: '200', success: true, msg: 'ok', data: row}
-  //   } else {
-  //     ctx.body = {code: '201', success: false, msg: 'fail', data: {}}
-  //   }
-  //
-  //
-  // })
 
   app.post('/api/v1/communities/addNews', async (ctx, next) => {
     let params = ctx.params
@@ -572,7 +517,8 @@ module.exports = function (app) {
         emitted_by_contract_account_id as contract_id
         from assets__non_fungible_token_events
         where token_new_owner_account_id = $1 
-    `;  //or  token_old_owner_account_id = $1
+    `;
+    //or  token_old_owner_account_id = $1
     const pool = new Pool({connectionString: constants.INDEXER})
     const {rows} = await pool.query(ownershipChangeEvents, [accountId]);
     console.log(rows);
