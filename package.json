@@ -11,6 +11,7 @@
     "build": "node build/build.js"
   },
   "dependencies": {
+    "aes": "^0.1.0",
     "axios": "^0.18.0",
     "config": "1.16.0",
     "crypto": "^1.0.1",
