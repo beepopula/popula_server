@@ -612,6 +612,88 @@ module.exports = function (app) {
 
   })
 
+  app.get('/api/v1/user/getNotificationsNewestCount', async (ctx, next) => {
+    let params = ctx.params
+    let accountId = params.accountId
+    let lastTime = params.lastTime ? params.lastTime : 0;
+    let Notification = ctx.model("notification")
+    let User = ctx.model("user")
+    let q = {"$or": [{accountId: accountId, "$or": [{type: "post"},{type: "comment"}]},{"commentContent.accountId": accountId, "$or": [{type: "comment"}, {type: "post"}, {type: "mainPost"}]}, {'options.At': accountId}]}
+    if (lastTime) {
+      q['createAt'] = {$gte: lastTime}
+    }
+
+    let n = []
+    let comments = await Notification.getRows(q,{createAt: -1})
+    for (let i = 0; i < comments.length; i++) {
+      let q = {type: "like", target_hash: comments[i].target_hash}
+      if (lastTime) {
+        q['createAt'] = {$gte: lastTime}
+      }
+      let likes = await Notification.getRows(q, {createAt: -1})
+      for (let i = 0; i < likes.length; i++) {
+        let user = await User.getRow({account_id: likes[i]['accountId']})
+        likes[i]['data'] = {
+          name: user && user['name'] ? user['name'] : '',
+          account_id: likes[i]['accountId'],
+          avatar: user && user['avatar'] ? user['avatar'] : ''
+        }
+      }
+
+      comments[i]['data'] = {}
+      comments[i]['data']['type'] = 'comment'
+      comments[i]['data']['likes'] = likes;
+      comments[i]['data']['count'] = likes.length;
+      comments[i]['data']['At'] = null
+      if (comments[i]['options']) {
+        for (let j = 0; j < comments[i]['options'].length; j++) {
+          if (accountId == comments[i]['options'][j]['At']) {
+            comments[i]['data']['At'] = comments[i]['options'][j]['At']
+          }
+        }
+      }
+
+      if ((comments[i]['type'] === 'post')||((comments[i]['type'] ==='comment'||comments[i]['type'] === 'mainPost')&&(comments[i].commentContent&&comments[i].commentContent.accountId!==accountId))) {
+        if (likes.length != 0 || comments[i]['data']['At'] != null) {
+          n.push(comments[i])
+        }
+      } else {
+        n.push(comments[i])
+      }
+
+    }
+    let fq = {account_id: accountId, type: "follow"}
+    if (lastTime) {
+      fq['createAt'] = {$gte: lastTime}
+    }
+    let follows = await Notification.getRows(fq, {createAt: -1})
+
+    if (follows.length>0||n.length>0){
+      return  ctx.body = {
+        code: '200',
+        success: true,
+        msg: 'ok',
+        data: {
+          count:  n.length+follows.length
+        },
+        lastTime: moment().valueOf()
+      }
+    }else {
+      return  ctx.body = {
+        code: '200',
+        success: true,
+        msg: 'ok',
+        data: {
+          count:  0
+        },
+        lastTime: moment().valueOf()
+      }
+    }
+
+
+
+  })
+
   app.get('/api/v1/user/getNotifications', async (ctx, next) => {
     let params = ctx.params
     let accountId = params.accountId
@@ -679,7 +761,7 @@ module.exports = function (app) {
       }
     }
 
-    if (follows.length > 0) {
+    if (follows.length > 0&&page==0) {
       n.push({
         type: 'follow',
         data: {
@@ -701,6 +783,7 @@ module.exports = function (app) {
     }
 
   })
+
 
 
   function keySort(key, sortType) {
