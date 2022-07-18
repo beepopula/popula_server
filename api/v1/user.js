@@ -15,6 +15,7 @@ module.exports = function (app) {
     let instagram = params.instagram
     let youtube = params.youtube
     let tiktok = params.tiktok
+    let website = params.website
     let signature = params.signature
     let User = ctx.model("user")
     if (!account_id) {
@@ -80,6 +81,15 @@ module.exports = function (app) {
       ops['tiktok']['verified'] = false
     }
 
+    ops['website'] = {}
+    if (website) {
+      ops['website']['url'] = tiktok
+      ops['website']['verified'] = false
+    } else {
+      ops['website']['url'] = ""
+      ops['website']['verified'] = false
+    }
+
     let row = await User.updateRow({account_id: account_id}, ops)
     ctx.body = {code: '200', success: true, msg: 'ok', data: {}}
   })
@@ -98,7 +108,7 @@ module.exports = function (app) {
     }
     let ops = {account_id: account_id}
     let u = await User.getRow({account_id: account_id})
-    if (twitter && u['twitter']) {
+    if (twitter ) {
       try {
         const url = `https://publish.twitter.com/oembed?url=${encodeURI(twitter)}`;
         let options = {

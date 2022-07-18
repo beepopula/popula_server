@@ -11,6 +11,7 @@ let schema = require('./base/model')({
   data: {type: {}, default: {}},
   twitter: {type: {}, default: {}},
   instagram: {type: {}, default: {}},
+  website: {type: {}, default: {}},
   youtube: {type: {}, default: {}},
   tiktok: {type: {}, default: {}},
   methodName: {type: String, default: String},
