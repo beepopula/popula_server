@@ -674,7 +674,7 @@ module.exports = function (app) {
         success: true,
         msg: 'ok',
         data: {
-          count:  n.length+follows.length>0?1:0
+          count:  n.length+(follows.length>0?1:0)
         },
         lastTime: moment().valueOf()
       }
