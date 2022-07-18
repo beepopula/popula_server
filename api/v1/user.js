@@ -655,7 +655,7 @@ module.exports = function (app) {
         }
       }
 
-      if ((comments[i]['type'] === 'post'||comments[i]['type'] ==='comment'||comments[i]['type'] === 'mainPost')&&(comments[i].commentContent&&comments[i].commentContent.accountId!==accountId)) {
+      if ((comments[i]['type'] === 'post')||((comments[i]['type'] ==='comment'||comments[i]['type'] === 'mainPost')&&(comments[i].commentContent&&comments[i].commentContent.accountId!==accountId))) {
         if (likes.length != 0 || comments[i]['data']['At'] != null) {
           n.push(comments[i])
         }
