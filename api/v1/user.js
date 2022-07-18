@@ -678,6 +678,7 @@ module.exports = function (app) {
         },
         lastTime: moment().valueOf()
       }
+
     }else {
       return  ctx.body = {
         code: '200',
