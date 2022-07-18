@@ -605,7 +605,9 @@ module.exports = function (app) {
   app.get('/api/v1/user/getNotifications', async (ctx, next) => {
     let params = ctx.params
     let accountId = params.accountId
-    let lastTime = params.lastTime ? params.lastTime : moment().subtract(30, "days").valueOf()
+    let lastTime = null//params.lastTime ? params.lastTime : moment().subtract(30, "days").valueOf()
+    let page = params.page ? +params.page : 0
+    let limit = params.limit ? +params.limit : 10
     let Notification = ctx.model("notification")
     let User = ctx.model("user")
     let q = {"$or": [{accountId: accountId, "$or": [{type: "post"},{type: "comment"}]},{"commentContent.accountId": accountId, "$or": [{type: "comment"}, {type: "post"}, {type: "mainPost"}]}, {'options.At': accountId}]}
@@ -614,7 +616,7 @@ module.exports = function (app) {
     }
 
     let n = []
-    let comments = await Notification.getRows(q, {createAt: -1})
+    let comments = await Notification.getPagedRows(q, page*limit,limit,{createAt: -1})
     for (let i = 0; i < comments.length; i++) {
       let q = {type: "like", target_hash: comments[i].target_hash}
       if (lastTime) {
