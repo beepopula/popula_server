@@ -524,7 +524,7 @@ module.exports = function (app) {
     console.log(rows);
     let n = []
     for (let i = 0; i < rows.length; i++) {
-      if (type == 'created') {
+    /*  if (type == 'created') {
         if (!rows[i]['token_old_owner_account_id'] || rows[i]['token_old_owner_account_id'] == '') {
           n.push(rows[i])
         }
@@ -532,6 +532,14 @@ module.exports = function (app) {
         if (rows[i]['token_old_owner_account_id'] && rows[i]['token_old_owner_account_id'] != '') {
           n.push(rows[i])
         }
+      }*/
+
+      if (type == 'created') {
+        if (!rows[i]['token_old_owner_account_id']) {
+          n.push(rows[i])
+        }
+      } else {
+         n.push(rows[i])
       }
     }
 
