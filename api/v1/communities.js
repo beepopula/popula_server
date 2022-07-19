@@ -511,7 +511,6 @@ module.exports = function (app) {
     let limit = params.limit ? +params.limit : 10
     let accountId = params.accountId
     let type = params.type  //collected , created
-
     const ownershipChangeEvents = `
         select distinct token_id as token_id,
         token_old_owner_account_id as token_old_owner_account_id,
