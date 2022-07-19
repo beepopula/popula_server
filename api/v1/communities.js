@@ -545,7 +545,7 @@ module.exports = function (app) {
        n=n.reverse()
       let offset = page * limit
       let m= (offset + limit >= n.length) ? n.slice(offset, n.length) : n.slice(offset, offset + limit)
-      ctx.body = {code: '200', success: true, msg: 'ok', data:m}
+      ctx.body = {code: '200', success: true, msg: 'ok', data:m,count:n.length}
 
   })
 
