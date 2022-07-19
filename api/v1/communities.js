@@ -505,7 +505,6 @@ module.exports = function (app) {
   })
 
   app.get('/api/v1/communities/findLikelyNFTs', async (ctx, next) => {
-
     let params = ctx.params
     let page = params.page ? +params.page : 0
     let limit = params.limit ? +params.limit : 10
