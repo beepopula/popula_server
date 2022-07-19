@@ -505,11 +505,11 @@ module.exports = function (app) {
   })
 
   app.get('/api/v1/communities/findLikelyNFTs', async (ctx, next) => {
-
     let params = ctx.params
+    let page = params.page ? +params.page : 0
+    let limit = params.limit ? +params.limit : 10
     let accountId = params.accountId
     let type = params.type  //collected , created
-
     const ownershipChangeEvents = `
         select distinct token_id as token_id,
         token_old_owner_account_id as token_old_owner_account_id,
@@ -542,9 +542,10 @@ module.exports = function (app) {
          n.push(rows[i])
       }
     }
-
-
-    ctx.body = {code: '200', success: true, msg: 'ok', data: n.reverse()}
+       n=n.reverse()
+      let offset = page * limit
+      let m= (offset + limit >= n.length) ? n.slice(offset, n.length) : n.slice(offset, offset + limit)
+      ctx.body = {code: '200', success: true, msg: 'ok', data:m,count:n.length}
 
   })
 
