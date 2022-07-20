@@ -83,7 +83,7 @@ module.exports = function (app) {
 
     ops['website'] = {}
     if (website) {
-      ops['website']['url'] = tiktok
+      ops['website']['url'] = website
       ops['website']['verified'] = false
     } else {
       ops['website']['url'] = ""
