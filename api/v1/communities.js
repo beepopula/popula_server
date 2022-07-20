@@ -426,7 +426,6 @@ module.exports = function (app) {
       doc['website']['url'] = ""
       doc['website']['verified'] = false
     }
-
     doc['discord'] = {}
     if (discord) {
       doc['discord']['url'] = discord
